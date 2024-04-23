@@ -1,3 +1,6 @@
+# I built it using a powerful tech stack: MySQL for the database, Express and Node.js for the backend, React for the frontend, and Sequelize as the ORM (Object-Relational Mapper).
+Utilizing Sequelize with migrations, seeders, and schema associations
+
 # Here's how PMS-portal empowers your projects:
 3 User Roles: Admin, Manager, and Employee - each with tailored access.
 Comprehensive Project Management Features: Assign projects, create tasks, track progress with logs, manage updates, and much more!
