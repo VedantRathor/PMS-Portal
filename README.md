@@ -1,4 +1,5 @@
-# I built it using a powerful tech stack: MySQL for the database, Express and Node.js for the backend, React for the frontend, and Sequelize as the ORM (Object-Relational Mapper).
+# Tech - stack
+I built it using a powerful tech stack: MySQL for the database, Express and Node.js for the backend, React for the frontend, and Sequelize as the ORM (Object-Relational Mapper).
 Utilizing Sequelize with migrations, seeders, and schema associations
 
 # Here's how PMS-portal empowers your projects:
