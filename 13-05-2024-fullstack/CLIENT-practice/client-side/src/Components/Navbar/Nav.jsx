@@ -2,11 +2,15 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoIosNotifications } from "react-icons/io";
 import { RxDot } from "react-icons/rx";
-function Nav({ parentFunction }) {
+import {io} from 'socket.io-client';
+const socket = io('http://localhost:7007');
+
+function Nav({ parentFunction,changeFlag }) {
   let auth = localStorage.getItem('user')
   auth = JSON.parse(auth)
   const navigate = useNavigate()
   const handleLogout = () => {
+    socket.emit('logout')
     localStorage.clear()
     navigate('/Login')
   }
@@ -17,13 +21,16 @@ function Nav({ parentFunction }) {
     <div className='navbar'>
       <div className='navbar-left'>
         <ul className='navbar-left-ul'>
-          <li><Link to="/">Home</Link></li>
+          { auth ? <>
+            <li><Link to="/">Home</Link></li>
           <li><Link to='/project'>Project</Link></li>
           <li><Link to='/task'>Task</Link></li>
           <li><Link to='/Logs'>Log</Link></li>
           <li><Link>Pending</Link></li>
           <li><Link>Details</Link></li>
           <li><Link to='/about'>About</Link></li>
+          </> : <></>}
+          
 
 
         </ul>

@@ -2,7 +2,7 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
-const Login = () => {
+const Login = ({changeFlag}) => {
   const navigate = useNavigate()
   useEffect(() => {
     const auth = localStorage.getItem('user')
@@ -27,6 +27,7 @@ const Login = () => {
     let result = await response.data
     if (result.status == 'success') {
       localStorage.setItem('user', JSON.stringify(result))
+      changeFlag()
       navigate('/')
     } else {
       // handle failure 

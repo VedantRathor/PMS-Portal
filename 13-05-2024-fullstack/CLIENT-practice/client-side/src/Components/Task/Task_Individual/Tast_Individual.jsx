@@ -11,7 +11,6 @@ function Tast_Individual() {
     let auth = localStorage.getItem('user')
     auth = JSON.parse(auth)
     let name, role;
-    console.log(auth)
     if (auth != null && auth != 'undefined') {
       name = auth.result.name
       role = auth.result.role

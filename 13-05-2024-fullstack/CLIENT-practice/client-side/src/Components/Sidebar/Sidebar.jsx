@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { TbLogs } from "react-icons/tb";
 import AddProject from '../Project/AddProject/AddProject';
+import { IoMdAddCircle } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 
 const localhost = 'http://localhost:7007'
@@ -11,7 +12,6 @@ function Sidebar({ parentFunction,ReverseLogId }) {
   let auth = localStorage.getItem('user')
   auth = JSON.parse(auth)
   let name, role;
-  console.log(auth)
   if (auth != null && auth != 'undefined') {
     name = auth.result.name
     role = auth.result.role
@@ -26,6 +26,9 @@ function Sidebar({ parentFunction,ReverseLogId }) {
     }
     const handleLogClicked = (project_id) =>{
         ReverseLogId(project_id)
+    }
+    const handleAddProjectClicked = () =>{
+        navigate('/add-new-project')
     }
 
     useEffect(() => {
@@ -44,13 +47,16 @@ function Sidebar({ parentFunction,ReverseLogId }) {
 
     return (
         <>
-        
+
             {projectData ?
                 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style={{ minHeight: '100%',height:'auto' }}>
-                    <a href="/" class=" d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none ">
+                        
+                    <div class=" d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none ">
                         <svg className="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
                         <span className="fs-4">Project </span>
-                    </a>
+                       { role == 1 ?<><span onClick={() => {handleAddProjectClicked()}} style={{marginLeft:'5%',cursor:'pointer'}}><  IoMdAddCircle size={30} color='lightGreen'/></span></> : <></>} 
+                    </div>
+                   
                     <hr />
                     <ul class="nav nav-pills flex-column mb-auto">
                         {projectData.map((eachProject => (

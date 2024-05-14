@@ -32,23 +32,40 @@ const users = new Map();
 
 io.on('connection', (socket) => {
 
-    socket.on('new-user-connected', (user_data) => {
-        users.set(user_data.user_id, socket);
-        console.log('connected',user_data.user_id)
+    socket.on('new-user-connected', (user_id) => {
+        users.set(user_id, socket);
+        console.log('connected',user_id) ;
+        const mysocket = users.get(user_id)
+        if( mysocket ){
+            mysocket.emit('render-my-notification',(user_id));
+        }
     })
+
     socket.on('disconnect', () => {
         users.forEach((value, key) => {
             if (value == socket) {
                 users.delete(key)
-                console.log('disconnected',)
+                console.log('user disconnected')
+            }
+        })
+    })
+
+    socket.on('logout',()=>{
+        console.log('user logged out')
+        users.forEach((value, key) => {
+            if (value == socket) {
+                users.delete(key)
+                console.log('disconnected')
             }
         })
     })
 })
+
 app.use((req, res, next) => {
     req.users = users;
     next();
   });
+  
 app.use(router)
 
 

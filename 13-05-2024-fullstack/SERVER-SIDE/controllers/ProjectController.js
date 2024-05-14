@@ -25,18 +25,28 @@ const addNewProject = async (req, res) => {
         const result = await project.createProject(req.body, user_id)
         if (result != null) {
             // here i want to emit the event ! 
+            
             const manager_id = req.body.manager_id ;
             const socket = req.users.get(manager_id)
+            console.log(manager_id)
+            console.log('socket socket',socket)
+            console.log(req.users)
             if( socket ){
-                console.log(socket)
-                socket.emit('new-notification',`new project assigned to ${manager_id}`)
+                
+                socket.emit('alert',`Project: ${req.body.project_name} assigned to you!!`)
             }
             // insert this in notification table ! 
             await notification.create({
                 user_id : manager_id ,
-                notification : `Project: ${req.body.project_name} assigned by admin`,
+                notification : `Project: ${req.body.project_name} assigned to you by admin`,
                 read : 0 
             })
+            await notification.create({
+                user_id : user_id,
+                notification : `You added a new project: ${req.body.project_name}`,
+                read : 0 
+            })
+
             service.successRetrievalResponse(res, 'project created succesfully')
         } else {
             service.failRetrievalResponse(res, 'project cannot be created')

@@ -7,6 +7,7 @@ const project = db.project
 const assignment = db.assignment
 const task = db.task
 const log = db.log
+const notification = db.notification
 const service = require('../services/service')
 const jwt = require('jsonwebtoken')
 const authIslogin = require('../middlewares/authIslogin');
@@ -83,8 +84,38 @@ async function UpdateDetails(req, res) {
     }
 }
 
+
+const getNotifications = async(req,res) =>{
+    try {
+        const userdata = res.locals.user ;
+        const {user_id , role , name } = userdata ;
+        // console.log(user_id,role,name)
+        const result = await notification.findAll({where : {
+            user_id : user_id 
+        },order:[['created_at','DESC']]})
+       
+        const {view} = req.params
+        console.log(view)
+        if( view == 'true' ){
+            console.log('inside this',view)
+          await notification.update({
+               read : 1 
+          },{
+            where : {
+              user_id : user_id 
+            }
+          })
+        }
+        
+        service.successRetrievalResponse(res,'Notifcations retrieved succesfully',result) 
+    } catch (error) {
+        console.log(error)
+        service.serverSideError(res)
+    }
+}
 module.exports = {
     adduser,
     loginUserByEmailPass,
-    UpdateDetails
+    UpdateDetails,
+    getNotifications
 }

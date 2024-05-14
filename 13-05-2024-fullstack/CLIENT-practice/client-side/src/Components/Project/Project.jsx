@@ -6,13 +6,12 @@ import ProjectDetailContainter from './ProjectDetailContainter'
 const localhost = 'http://localhost:7007'
 
 function Project() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   let auth = localStorage.getItem('user')
   auth = JSON.parse(auth)
   let name, role;
-  console.log(auth)
-  if (auth != null && auth != 'undefined') {
+  if (auth != null && auth != undefined) {
     name = auth.result.name
     role = auth.result.role
   }else{

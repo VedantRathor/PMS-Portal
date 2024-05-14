@@ -23,6 +23,10 @@ router.use(express.urlencoded({extended:false}))
 
 
 //UserController
+
+//NOtification 
+router.get('/notification/:view',authIslogin, UserController.getNotifications)
+
 router.post('/Login',UserController.loginUserByEmailPass)
 router.post('/register', UserController.adduser)
 
@@ -125,6 +129,7 @@ router.post('/generate-pdf', (req, res) => {
     // Finalize the PDF
     doc.end();
 });
+
 
 
 
