@@ -1,26 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoIosNotifications } from "react-icons/io";
 import { RxDot } from "react-icons/rx";
+import { CiLogout } from "react-icons/ci";
+import { CgProfile } from "react-icons/cg";
 import {io} from 'socket.io-client';
+import ProfileComponent from '../ProfileComponent';
 const socket = io('http://localhost:7007');
 
 function Nav({ parentFunction,changeFlag }) {
+  const [viewProfile,setViewProfile] = useState(false)
+  const handleprofileClicked = () =>{
+    setViewProfile(!viewProfile)
+    console.log(viewProfile)
+  }
+
   let auth = localStorage.getItem('user')
   auth = JSON.parse(auth)
   const navigate = useNavigate()
-  const handleLogout = () => {
-    socket.emit('logout')
-    localStorage.clear()
-    navigate('/Login')
-  }
+
   const handleNotificationClick = () => {
     parentFunction()
   }
+
   return (
     <div className='navbar'>
       <div className='navbar-left'>
         <ul className='navbar-left-ul'>
+         <li className='logo'><a ><img className='logoimage' src='https://image.freepik.com/free-vector/service-logo-template-design-vector_20029-570.jpg'/></a></li>
           { auth ? <>
             <li><Link to="/">Home</Link></li>
           <li><Link to='/project'>Project</Link></li>
@@ -29,7 +36,7 @@ function Nav({ parentFunction,changeFlag }) {
           <li><Link>Pending</Link></li>
           <li><Link>Details</Link></li>
           <li><Link to='/about'>About</Link></li>
-          </> : <></>}
+          </> : <h5 className='text-white text-center'>Welcome to PMS Portal, Please Login! </h5>}
           
 
 
@@ -44,8 +51,10 @@ function Nav({ parentFunction,changeFlag }) {
                   <RxDot size={5} style={{ color: 'red', position: 'absolute', backgroundColor: 'red', borderRadius: '100px', right: '5px' }} />
                   <IoIosNotifications onClick={() => { handleNotificationClick() }} style={{ cursor: 'pointer' }} size={30} color='white' />
                 </li>
-                <li className='text-white'>{auth.result.name}</li>
-                <li><Link onClick={handleLogout} to='/Login' className='text-danger'>Logout</Link></li>
+                <li onClick={()=>{handleprofileClicked()}} className='text-white'><CgProfile  style={{cursor:'pointer', position:'relative'}} size={26}/>
+                <div style={{visibility: viewProfile ? 'visible': 'hidden'}}><ProfileComponent/></div>
+                </li>
+               
               </>
               : <li><Link to='/Login'>Login</Link></li>}
 

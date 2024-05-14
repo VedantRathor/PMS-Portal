@@ -43,7 +43,7 @@ function AllLogs({ eachproject, eachTask, eachLog, parentFunctionDisplayData,gen
        <td><span className='makelink' onClick={()=>{handleProjectClick(eachproject)}}>{eachproject.project_name}</span> <span onClick={()=>{handleGeneratePDF(eachproject)}} style={{cursor:'pointer'}}><FaFilePdf color='rgb(255, 152, 152)' size={23}/></span></td>
        <td onClick={()=>{handleTaskClick(eachTask)}} className='makelink'>{eachTask.task_name}</td>
        <td>{eachLog.logstatus == 'pending' ? <CiStopwatch size={30} color='yellow'/> : eachLog.logstatus == 'rejected' ? <RxCross2 size={30} color='red'/> : <ImCheckboxChecked size={25} color='green'/> }</td>
-       <td>{eachLog.approved_by ? 'Checked': 'Pending' }</td>
+       <td>{eachLog.approved_by ? <span className='badge badge-primary bg-success'>Checked</span>: <p className='badge badge-warning bg-warning text-dark'>Pending</p> }</td>
        
       </tr>
     </>

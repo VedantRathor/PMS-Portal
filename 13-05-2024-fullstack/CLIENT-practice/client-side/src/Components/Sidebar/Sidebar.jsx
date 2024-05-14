@@ -53,8 +53,8 @@ function Sidebar({ parentFunction,ReverseLogId }) {
                         
                     <div class=" d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none ">
                         <svg className="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                        <span className="fs-4">Project </span>
-                       { role == 1 ?<><span onClick={() => {handleAddProjectClicked()}} style={{marginLeft:'5%',cursor:'pointer'}}><  IoMdAddCircle size={30} color='lightGreen'/></span></> : <></>} 
+                        <span className="fs-4">Project</span>
+                       { role == 1 ?<><span onClick={() => {handleAddProjectClicked()}} style={{marginLeft:'5%',cursor:'pointer'}}><  IoMdAddCircle size={30} color='lightGreen'/></span></> : <></>}   
                     </div>
                    
                     <hr />
@@ -62,7 +62,7 @@ function Sidebar({ parentFunction,ReverseLogId }) {
                         {projectData.map((eachProject => (
                             <li className='nav-link'>
                                 <h6 onClick={() => { handleProjectClick(eachProject.project_id) }} className='text-info' style={{ cursor: 'pointer' }}>{eachProject.project_id}. {eachProject.project_name}</h6>
-                                <div><p onClick={()=>{handleLogClicked(eachProject.project_id)}} style={{ cursor: 'pointer', textDecoration: 'underline' }}>Logs<TbLogs color='yellow' /></p> </div>
+                                <div><p onClick={()=>{handleLogClicked(eachProject.project_id)}} className='makelink'>Logs</p> </div>
                                 <hr style={{ color: 'grey' }} />
                             </li>
                         )))}

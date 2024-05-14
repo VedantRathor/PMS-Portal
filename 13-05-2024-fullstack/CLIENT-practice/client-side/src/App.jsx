@@ -18,6 +18,7 @@ const socket = io('http://localhost:7007');
 function App() {
 
   const [view, setView] = useState(false)
+  
   const [flag, setFlag] = useState(false)
   const [refresh,setRefresh] = useState(false)
 
@@ -60,8 +61,8 @@ function App() {
       <BrowserRouter>
         <Nav changeFlag={changeFlag} parentFunction={parentFunction} />
         {/* <input type='file'></input> */}
-        <Routes>
-          <Route path='/project' Component={Project}></Route>
+        <Routes >
+          <Route path='/project'  Component={Project}></Route>
           <Route path='/' Component={Home}></Route>
           <Route path='/Logs' Component={LogIndividual}></Route>
           <Route path='/task' Component={Tast_Individual}></Route>
@@ -70,7 +71,7 @@ function App() {
           <Route path="/add-new-project" Component={AddProject}/>
         </Routes>
       </BrowserRouter>
-      <div style={{ visibility: view ? 'visible' : 'hidden' }}><Notification refresh={refresh} loadNotification={loadNotification} view={view} /></div>
+      <div  style={{ visibility: view ? 'visible' : 'hidden' }}><Notification refresh={refresh} loadNotification={loadNotification} view={view} /></div>
     </div>
   )
 }

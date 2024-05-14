@@ -36,7 +36,7 @@ function Notification({loadNotification,refresh,view}) {
     <div className='notification-container'>
       { notificationData != null && notificationData != undefined && notificationData.length != 0 ? 
        <>
-         <table style={{ border: '1px solid rgb(98, 92, 92)'}} class="table table-alice table-hover">
+         <table class="table table-dark table-hover mt-2" >
                 <thead>   
                     <tr>
                         <th scope="col">Notification</th>

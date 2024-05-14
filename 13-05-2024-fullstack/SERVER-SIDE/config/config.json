@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "Vedant@9820",
-    "database": "ProjectManagementSystem",
+    "password": "Vedant@12345",
+    "database": "heliospmsportal",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

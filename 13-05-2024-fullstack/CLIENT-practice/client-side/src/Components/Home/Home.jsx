@@ -7,10 +7,12 @@ function Home() {
     navigate('/project')
   }
   return (
-    <div style={{width:'100%',height:'100%'}} className='text-center text-white'>
-       <div style={{backgroundColor:' #2d3034'}} class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <div style={{width:'100%',height:'100%'}} className='text-center text-white '>
+   
+       <div style={{backgroundColor:' #2d3034'}} class="cover-container d-flex h-100 p-3 mx-auto flex-column home-container">
+      
       <header class="masthead mb-auto">
-        <div class="inner">
+        <div class="inner" style={{zIndex:'2'}}>
           <h3 class="masthead-brand">Explore our features</h3>
           <nav class="nav nav-masthead justify-content-center">
            
