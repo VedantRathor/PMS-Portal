@@ -141,7 +141,7 @@ function Tast_Individual() {
             <div className='display2' style={{ color: 'white', visibility: flag ? 'visible' : 'hidden' }}>
                 <Display eachTask={eachTask} parentFunctionDisplayData={parentFunctionDisplayData} details={displayData} />
             </div>
-           {taskData && taskData.length != 0 ? <Task project_id={selectProjectData} RefreshMe={RefreshMe} openTaskContainer={openTaskContainer} parentFunctionDisplayData={parentFunctionDisplayData} taskData={taskData}/> : <h5 className='text-white'>No task Available</h5> } 
+           {taskData && taskData.length != 0 ? <Task project_id={selectProjectData} RefreshMe={RefreshMe} openTaskContainer={openTaskContainer} parentFunctionDisplayData={parentFunctionDisplayData} taskData={taskData}/> : <h5 className='text-white text-center     '>Please Select a <b>project!    </b></h5> } 
             </div>
         </div>
     )

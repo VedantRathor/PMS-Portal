@@ -87,7 +87,7 @@ function AddProject() {
         </div>
         <div class="col-12 mt-3">
           <label class="form-label">Description</label><  TbFileDescription size={21} color="yellow" style={{marginLeft:'1%'}}/>
-          <input type="text" style={{height:'100%'}} onChange={handleDescription} class="form-control" />
+          <textarea type="text" style={{height:'100%'}} onChange={handleDescription} class="form-control" />
         </div>
 
         <div  className="col-12 mt-5">

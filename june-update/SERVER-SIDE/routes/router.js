@@ -60,10 +60,8 @@ router.get('/project-details-task/query/:project_id',authIslogin,TaskController.
 //LogController
 router.post('/add-log/:project_id/:task_id',authIslogin, LogController.addLogInproject_idAndtask_id)
 router.post('/update-log-status',authIslogin, LogController.updateLogStatus)
-
 router.get('/project-details-log/:project_id', LogController.logByproject_id)
 router.get('/project-details-logByTask/:project_id/:task_id' ,authIslogin, LogController.logByproject_idAndtask_id)
-
 router.get('/project-details-log-allLogs/:project_id/:status/:sortby', LogController.allLogs)
 
 

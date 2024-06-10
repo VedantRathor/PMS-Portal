@@ -5,6 +5,7 @@ import AllUserDisplay from './AllUserDisplay';
 import axios from 'axios';
 import UserEditContainer from './UserEditContainer';
 import AddUser from './AddUser';
+import Email from '../Email'
 const localhost = 'http://localhost:7007'
 
 function AllUsers() {
@@ -14,6 +15,8 @@ function AllUsers() {
     const [UserEcVisibility,setUserEcVisibility] = useState(false) ;
     const [AddUserVisibility, setAddUserVisibility] = useState(false) ;
     const [refreshMe , setRefreshMe] = useState(false) ;
+    const [openEmail, setEmailVisibility] = useState(false);
+    const [email,setEmail] = useState('')
 
     const ToggleUserEcVisibility = () =>{
         setUserEcVisibility(!UserEcVisibility);
@@ -30,6 +33,13 @@ function AllUsers() {
         setRefreshMe(!refreshMe) ; 
     }
 
+    
+    const ToggleEmailVisibility = (email) =>{
+      setEmailVisibility(!openEmail);
+      setEmail(email) ; 
+      console.log(openEmail,email) ;
+    }
+    
     useEffect( ()=>{
         const getAllUsers = async() =>{
             let response = await axios.get(`${localhost}/api/allusers`,{
@@ -45,7 +55,8 @@ function AllUsers() {
 
 
     return (
-        <div className='members-individual-container'>
+        <div className='members-individual-container' style={{zIndex:'1'}}>
+        {openEmail ?<Email ToggleEmailVisibility={ToggleEmailVisibility} email = {email} /> : <></>}
           {AddUserVisibility == true ?<AddUser RefreshMe={RefreshMe} ToggleAddUserVisibility={ToggleAddUserVisibility} />  : <></>}
             <h4 className='text-white text-center mt-2 d-flex justify-content-center align-items-center gap-2'>All Members <IoIosPeople size={30} color='yellow' /></h4>
             <div className='member-all-sorting-searching-feature'>
@@ -77,7 +88,7 @@ function AllUsers() {
             </div>
             <div className='members-show-container'>
               {UserEcVisibility ? <UserEditContainer RefreshMe={RefreshMe} ToggleUserEcVisibility={ToggleUserEcVisibility} /> : <></>} 
-               {auth && auth.result.role == 1 && allUserData ? <AllUserDisplay ToggleUserEcVisibility={ToggleUserEcVisibility} allUserData={allUserData}/> : <></>} 
+               {auth && auth.result.role == 1 && allUserData ? <AllUserDisplay email={email} ToggleEmailVisibility={ToggleEmailVisibility} ToggleUserEcVisibility={ToggleUserEcVisibility} allUserData={allUserData}/> : <></>} 
             </div>
         </div>
     )

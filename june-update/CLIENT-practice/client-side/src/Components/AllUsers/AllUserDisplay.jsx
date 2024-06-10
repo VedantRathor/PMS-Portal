@@ -2,11 +2,15 @@ import React from 'react'
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 
-function AllUserDisplay({ allUserData ,ToggleUserEcVisibility}) {
+function AllUserDisplay({ allUserData ,ToggleUserEcVisibility,ToggleEmailVisibility,email}) {
     const HandleEditButtonClicked = (eachUser) => {
         localStorage.setItem('userDetails', JSON.stringify(eachUser));
         ToggleUserEcVisibility();
     }
+
+    const handleEmailClicked = (email) =>{
+        ToggleEmailVisibility(email);
+     }
 
     return (
         <>
@@ -26,7 +30,7 @@ function AllUserDisplay({ allUserData ,ToggleUserEcVisibility}) {
                     {allUserData.map((eachUser) => (
                         <tr>
                             <td>{eachUser.name}</td>
-                            {eachUser.role == 2 ? <td className='text-warning'>{eachUser.email}</td> : <td >{eachUser.email}</td>}
+                            {eachUser.role == 2 ? <td className='text-warning makelink'  onClick={()=>{handleEmailClicked(eachUser.email)}}>{eachUser.email}</td> :<td className=' makelink'  onClick={()=>{handleEmailClicked(eachUser.email)}}>{eachUser.email}</td>}
                             <td>{eachUser.created_at.split('T')[0]}</td>
                             <td>{eachUser.updated_at.split('T')[0]}</td>
                             {eachUser.role == 2 ? <td className='text-warning'>Manager</td> : <td>Employee</td>}

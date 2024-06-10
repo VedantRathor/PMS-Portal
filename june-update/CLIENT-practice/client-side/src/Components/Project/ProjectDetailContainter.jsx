@@ -9,11 +9,12 @@ import Display from '../Display'
 import LogData from '../Logs/LogData'
 import TaskForm from '../Task/TaskForm'
 import AddMembers from './AddMembers'
+import Email from '../Email'
 
 const localhost = 'http://localhost:7007'
 
-function ProjectDetailContainter({ project_id,logid,navigateTask, AddTaskFORMVisibility,OpenMember,openMember}) {
-  
+function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMVisibility, OpenMember, openMember }) {
+
   const navigate = useNavigate()
   let auth = localStorage.getItem('user')
   auth = JSON.parse(auth)
@@ -21,28 +22,36 @@ function ProjectDetailContainter({ project_id,logid,navigateTask, AddTaskFORMVis
   if (auth != null && auth != undefined) {
     name = auth.result.name
     role = auth.result.role
-  }else{
+  } else {
     localStorage.removeItem('user')
     navigate('/Login')
   }
-  
-  const [singleProjectData, setSingleProjectData] = useState()
-  const [logData,setLogData] = useState()
-  const [taskData, setTaskData] = useState()
-  const [projectMembers,setProjectMember] = useState() 
-  const [eachTask,setEachTask] = useState()
-  const [displayData,setDisplayData] = useState('') 
-  const [flag,setFlag] = useState(false) ; 
-  const [refresh,setRefresh] = useState(false) ;
 
-  const RefreshMe = () =>{
+  const [singleProjectData, setSingleProjectData] = useState()
+  const [logData, setLogData] = useState()
+  const [taskData, setTaskData] = useState()
+  const [projectMembers, setProjectMember] = useState()
+  const [eachTask, setEachTask] = useState()
+  const [displayData, setDisplayData] = useState('')
+  const [flag, setFlag] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  // EMAIL 
+  const [openEmail, setEmailVisibility] = useState(false);
+  const [email,setEmail] = useState('')
+  const ToggleEmailVisibility = (email) =>{
+    setEmailVisibility(!openEmail);
+    setEmail(email) ; 
+    console.log(openEmail,email) ;
+  }
+
+  const RefreshMe = () => {
     setRefresh(!refresh)
   }
 
-  const parentFunctionDisplayData = (details='',eachTask)=>{
-             setDisplayData(details)
-             setEachTask(eachTask)
-             setFlag(!flag)
+  const parentFunctionDisplayData = (details = '', eachTask) => {
+    setDisplayData(details)
+    setEachTask(eachTask)
+    setFlag(!flag)
   }
   useEffect(() => {
     const getSingleProjectData = async () => {
@@ -50,16 +59,16 @@ function ProjectDetailContainter({ project_id,logid,navigateTask, AddTaskFORMVis
         const response = await axios.get(`${localhost}/project-details-project/${project_id}`)
         const result = await response.data
         setSingleProjectData(result.result[0])
-       
+
       }
     }
 
     getSingleProjectData()
 
   }, [project_id])
-  if( navigateTask ){
-    localStorage.setItem('projectDetail',JSON.stringify(singleProjectData));
-    
+  if (navigateTask) {
+    localStorage.setItem('projectDetail', JSON.stringify(singleProjectData));
+
   }
 
   useEffect(() => {
@@ -71,61 +80,63 @@ function ProjectDetailContainter({ project_id,logid,navigateTask, AddTaskFORMVis
       })
       const result = await response.data
       setTaskData(result.result[0].tasks)
-      
+
     }
     getTaskDataByProjectId()
-  }, [project_id,refresh])
+  }, [project_id, refresh])
 
-   useEffect(()=>{
-    const getProjectMembers = async()=>{
-      if( project_id != null ){
+  useEffect(() => {
+    const getProjectMembers = async () => {
+      if (project_id != null) {
         const response = await axios.get(`${localhost}/project-details-members/${project_id}`)
-        const result = await response.data 
+        const result = await response.data
         setProjectMember(result.result[0].assignments)
         console.log(projectMembers)
       }
-      
-    }   
-    getProjectMembers()
-   },[project_id,refresh])
 
-   useEffect(()=>{
-    const getLogByProjectId = async()=>{
-      if( logid == true ){
+    }
+    getProjectMembers()
+  }, [project_id, refresh])
+
+  useEffect(() => {
+    const getLogByProjectId = async () => {
+      if (logid == true) {
         const response = await axios.get(`${localhost}/project-details-log/${project_id}`)
-        const result = await response.data 
+        const result = await response.data
         setLogData(result.result[0].tasks)
-      
+
       }
     }
     getLogByProjectId()
-   },[logid])
+  }, [logid]);
+  
   return (
     <>
-   {navigateTask ? <div><TaskForm RefreshMe={RefreshMe} project_id={project_id} AddTaskFORMVisibility={AddTaskFORMVisibility}/></div> :<></>} 
-   {openMember ? <div><AddMembers RefreshMe={RefreshMe} project_id={project_id} OpenMember={OpenMember}/></div> : <></>}
-    <div className='display' style={{color:'white',visibility: flag ? 'visible' : 'hidden'}}>
-      <Display eachTask={eachTask} parentFunctionDisplayData={parentFunctionDisplayData} details={displayData} />
-    </div>
+      {openEmail ?<Email ToggleEmailVisibility={ToggleEmailVisibility} email = {email} /> : <></>}
+      {navigateTask ? <div><TaskForm RefreshMe={RefreshMe} project_id={project_id} AddTaskFORMVisibility={AddTaskFORMVisibility} /></div> : <></>}
+      {openMember ? <div><AddMembers RefreshMe={RefreshMe} project_id={project_id} OpenMember={OpenMember} /></div> : <></>}
+      <div className='display' style={{ color: 'white', visibility: flag ? 'visible' : 'hidden' }}>
+        <Display eachTask={eachTask} parentFunctionDisplayData={parentFunctionDisplayData} details={displayData} />
+      </div>
       <ProjectInfo parentFunctionDisplayData={parentFunctionDisplayData} singleProjectData={singleProjectData} />
-      { logid == true && logData ? 
+      {logid == true && logData ?
         <>
-           <div className='task-and-members'>
-          <div className='task-container'>
+          <div className='task-and-members'>
+            <div className='task-container'>
               <LogData parentFunctionDisplayData={parentFunctionDisplayData} logData={logData} />
+            </div>
           </div>
+        </>
+        : taskData && taskData.length != 0 ?
+          <div className='task-and-members'>
+            <div className='task-container'>
+              <Task parentFunctionDisplayData={parentFunctionDisplayData} taskData={taskData} />
+              {projectMembers && projectMembers.length != 0 ? < ProjectMembers ToggleEmailVisibility={ToggleEmailVisibility} projectMembers={projectMembers} /> : <></>}
+            </div>
+
           </div>
-        </> 
-      : taskData && taskData.length!=0 ?
-        <div className='task-and-members'>
-          <div className='task-container'>
-            <Task parentFunctionDisplayData={parentFunctionDisplayData} taskData={taskData}/>
-            { projectMembers && projectMembers.length!=0 ? < ProjectMembers projectMembers={projectMembers}/>: <></>}
-          </div>
-     
-        </div>
-        : <>No Data Available</>}
-      
+          : <>No Data Available</>}
+
 
     </>
   )

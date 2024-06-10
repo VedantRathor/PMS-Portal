@@ -6,11 +6,11 @@ import { RxCross2 } from "react-icons/rx";
 import { FaCircle } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-function ProjectMembers({projectMembers}) {
+function ProjectMembers({projectMembers,ToggleEmailVisibility}) {
   
-  const navigate = useNavigate()
-  let auth = localStorage.getItem('user')
-  auth = JSON.parse(auth)
+  const navigate = useNavigate();
+  let auth = localStorage.getItem('user');
+  auth = JSON.parse(auth);
   let name, role;
   if (auth != null && auth != 'undefined') {
     name = auth.result.name
@@ -20,6 +20,11 @@ function ProjectMembers({projectMembers}) {
     navigate('/Login')
   }
   
+
+  const handleEmailClicked = (email) =>{
+     ToggleEmailVisibility(email);
+  }
+
   return (
     <>
         <table style={{ border: '1px solid rgb(98, 92, 92)',width:'100%'}} class="table table-dark table-hover">
@@ -39,7 +44,7 @@ function ProjectMembers({projectMembers}) {
            { projectMembers.map((eachMember => (
              <tr>
                 <td>{eachMember.userinfo.name}</td>
-                <td>{eachMember.userinfo.email}</td>
+                <td><p  className='makelink' onClick={()=>{handleEmailClicked(eachMember.userinfo.email)}}>{eachMember.userinfo.email}</p></td>
                 <td>{eachMember.created_at.split('T')[0]}</td>
                 <td>{eachMember.updated_at.split('T')[0]}</td>
              </tr>

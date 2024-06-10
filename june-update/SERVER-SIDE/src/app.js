@@ -7,7 +7,7 @@ const path = require('path');
 const router = require('../routes/router')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const http = require('http')
+const http = require('http')    
 const { Server } = require('socket.io')
 const server = http.createServer(app)
 const userinfo = db.userinfo
@@ -48,7 +48,8 @@ io.on('connection', (socket) => {
                 console.log('user disconnected')
             }
         })
-    })
+    });
+    
 
     socket.on('logout',()=>{
         console.log('user logged out')
@@ -66,7 +67,7 @@ app.use((req, res, next) => {
     next();
     
   });
-  
+
 app.use(router)
 
 

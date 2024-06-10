@@ -81,18 +81,17 @@ const loginUserByEmailPass = async (req, res) => {
 }
 
 async function UpdateDetails(req, res) {
-
-    const { name, email, password, confirmpassword, id } = req.body;
     const profile = req.file ? req.file.path : "No File";
     console.log(profile);
-    const response = await userinfo.update({ name: name, email: email, password: password, updated_at: new Date(), profile: profile }, { where: { user_id: id } });
+    res.json(profile);
+    // const response = await userinfo.update({ name: name, email: email, password: password, updated_at: new Date(), profile: profile }, { where: { user_id: id } });
 
-    if (response) {
-        res.status(200).json({ status: "success", message: "Profile Updated", response })
-    }
-    else {
-        console.log("Error in Updating User Data");
-    }
+    // if (response) {
+    //     res.status(200).json({ status: "success", message: "Profile Updated", response })
+    // }
+    // else {
+    //     console.log("Error in Updating User Data");
+    // }
 }
 
 
