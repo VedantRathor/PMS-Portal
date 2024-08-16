@@ -1,0 +1,738 @@
+* {
+  padding: 0;
+  margin: 0;
+  /* background-color: #212529 !important; */
+}
+
+.my-root {
+  width: 99.8vw;
+ height: 100vh;
+  position: relative;
+
+}
+
+
+.navbar {
+  background-color: #212529 !important;
+  height: 15%;
+  width: 100%;
+  border: 1px solid rgb(48, 48, 75);
+}
+
+.navbar-left {
+  margin-left: 10px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start
+}
+
+.navbar-right {
+  margin-right: 30px;
+}
+
+.navbar-left-ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+  gap: 20px;
+}
+
+.navbar-left-ul li a {
+  text-decoration: underline;
+  cursor: pointer;
+  list-style-type: none;
+
+  color: white;
+  font-size: large
+}
+
+.navbar-left-ul li a:hover {
+  color: rgb(115, 181, 236);
+}
+
+.navbar-right-ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  list-style-type: none;
+}
+
+.navbar-right-ul li a {
+  font-size: large;
+  text-decoration: underline;
+  cursor: pointer;
+  list-style: none;
+  color: white
+}
+
+.navbar-right-ul li a:hover {
+  color: rgb(185, 71, 71);
+}
+
+.project-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+}
+
+.sidebar {
+
+  width: 15%;
+  height: 100%;
+}
+
+.project-right-container {
+  position: relative;
+  background-color: #2d3034 !important;
+  width: 85%;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  height: 102vh;
+  margin: auto;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar */
+.project-right-container::-webkit-scrollbar {
+  width: 20px; /* Increase width to create space for margin */
+}
+
+.project-right-container::-webkit-scrollbar-track {
+  background: #282828; /* Background of the track (scrollbar container) */
+
+  margin-right: 50px; /* Optional: Add space to the right of the track */
+}
+
+.project-right-container::-webkit-scrollbar-thumb {
+  background-color: #555; /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Rounded corners for the thumb */
+  border: 5px solid transparent; /* Create space around the thumb */
+  background-clip: content-box; /* Ensure the border creates the margin effect */
+  
+}
+
+.project-right-container::-webkit-scrollbar-thumb:hover {
+  background-color: #888; /* Change color when hovered */
+ 
+}
+
+
+.task-and-members {
+  /* border : 2px solid red ; */
+  width: 100%;
+  height: 69%;
+  /* background: transparent */
+}
+
+.task-container {
+  width: 100%;
+
+}
+
+.task-container table {
+  font-size: medium;
+}
+
+.task-container table tbody {
+  font-size: medium;
+}
+
+.display {
+  border-radius: 10px;
+  position: absolute;
+  width: 98.5%;
+  margin: 2px px;
+  background-color: #212529f9 !important;
+  height: 70%;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.display2 {
+  border-radius: 10px;
+  position: absolute;
+  width: 100%;
+  margin: 2px px;
+  background-color: #212529f9 !important;
+  height: 80%;
+  min-height: 30vh;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.task-individual-container {
+  padding: 1px;
+  width: 100%;
+  height: 100%;
+  background-color: #212529f9 !important;
+  position: relative;
+}
+
+.log-individual-container {
+  padding: 1px;
+  width: 100%;
+  min-height: 100%;
+
+  /* border: 2px solid red; */
+  height: auto;
+  background-color: #212529f9 !important;
+}
+
+
+.log-show-container {
+  height: 80%;
+  width: 95%;
+  margin: auto;
+  margin-top: 2%;
+  position: relative;
+  font-size: 1.0rem
+}
+
+.makelink {
+  text-decoration: underline;
+  color: rgb(180, 234, 255) !important;
+  cursor: pointer;
+}
+
+.task-all-sorting-searching-feature {
+
+  width: 95%;
+  height: 8%;
+  margin: auto;
+  margin-top: 1%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4%
+}
+
+.Logs-all-sorting-searching-feature {
+  width: 95%;
+  height: 8%;
+  margin: auto;
+  margin-top: 1%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4%
+}
+
+.my-select {
+
+  min-width: 115%;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #4a4d50 !important;
+}
+
+.my-select-new{
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #4a4d50 !important;
+}
+
+.task-show-container {
+  
+  height: 80%;
+  width: 95%;
+  margin: auto;
+  margin-top: 1%;
+  position: relative;
+  font-size: 1.0rem
+}
+
+.refresh {
+  color: white;
+  cursor: '';
+}
+
+.about-outer-container {
+  width: 100%;
+  min-height: 100%;
+  background-color: #212529 !important;
+  padding: 4%;
+}
+
+.about-container {
+  width: 70%;
+
+  margin: auto;
+  background-color: #212529 !important;
+  z-index: 20;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.social-media {
+  text-decoration: none;
+  margin: 10px;
+}
+
+.notification-container {
+  color: white;
+  font-size: 0.9rem;
+  /* background-color: rgb(255, 255, 255); */
+  z-index: 20;
+  overflow-y: auto;
+  width: 30%;
+  height: 50%;
+  position: absolute;
+  top: 11%;
+  right: 4.7%;
+  /* background-color: #ffffff !important; */
+  backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(74, 74, 74, 0.75);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+ padding: 0.5%;
+}
+
+
+
+
+
+.login-form-main-container {
+  /* background-color: #212529 !important; */
+  background-image: url(https://img.freepik.com/free-vector/social-distancing-meeting_52683-38356.jpg?w=1380&t=st=1715688899~exp=1715689499~hmac=cad1ed8381e6f8d08a25e03edb1c323101e07df947672efbab025d5c722a6fc7);
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.form-container {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.myform {
+  border-radius: 4%;
+  width: 20%;
+  padding: 2%;
+  /* background-color: rgb(58, 55, 55) !important; */
+  backdrop-filter: blur(5px) saturate(180%);
+  -webkit-backdrop-filter: blur(5px) saturate(180%);
+  background-color: rgba(74, 76, 82, 0.75) !important;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  z-index: 2;
+}
+
+
+.form-container2 {
+  width: 30%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column ; 
+  align-items: center;
+  color: white;
+  gap : 10% ;
+  margin-top: 2%
+}
+
+.myform2{
+  z-index: 1;
+ padding: 6%;
+ border-radius: 2% ;
+ background-color: rgba(36, 31, 31, 0.884) !important;
+ 
+  
+}
+
+.addproject-container{
+  display: flex ;
+  justify-content: center; 
+   background-image: url(https://assets.materialup.com/uploads/ce3a8fd5-db60-43cc-8b1b-991eb8ad6de0/preview.png);
+  /* background-color: #212529 !important; */
+  width: 100% ;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.911); 
+}
+
+.logoimage{
+  width: 50px;
+  height: 10%;
+  border-radius: 100%;
+}
+
+.user-profile{
+  border-radius: 1%;
+  width: 20%; 
+  min-height: 20rem;
+  height: 20rem;
+  z-index: 3;
+  /* background-color: rgb(59, 59, 59); */
+  backdrop-filter: blur(5px) saturate(178%) ;
+  -webkit-backdrop-filter: blur(5px) saturate(178%) ;
+  background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+  position: absolute;
+  right: 2.3%;
+  box-shadow: 0 4px 8px 0 rgba(59, 57, 57, 0.2), 0 6px 20px 0 rgba(59, 57, 57, 0.19);
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-image{
+  width: 100% ; 
+  /* background-color: rgb(83, 83, 83) ; */
+  height: 30%;
+  display: flex ;
+  justify-content: center ;
+  align-items:  center;
+}
+
+.list-user li{
+  list-style-type: none;
+}
+
+.logoutbtn{
+  width: 100%;
+  margin-top: 6%;
+  padding-right: 4%;
+   background-color: red;
+}
+
+.LogTaskAdd{
+  position: absolute;
+  padding: 1% ; 
+  width: 100%;
+  height: auto ; 
+  min-height: 40%;
+  backdrop-filter: blur(10px) saturate(178%) ;
+  -webkit-backdrop-filter: blur(10px) saturate(178%) ;
+  background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+}
+
+.add-log-task-container{
+  width: 100%;
+  
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center ;
+  align-items: center;  
+}
+
+.addlog-form{
+  display: flex ;
+  justify-content: center ;
+  align-items: center;
+  min-width: 35%;
+}
+
+.myformAddlog{
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.task-form{
+  position: absolute;
+  width: 98%;
+  min-height: 60%;
+  height: auto;
+  backdrop-filter: blur(10px) saturate(178%) ;
+  -webkit-backdrop-filter: blur(10px) saturate(178%) ;
+  background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+  
+}
+
+.myTaskForm{
+  /* background-color: red !important; */
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+ 
+}
+
+.myTaskActualForm{
+  /* background-color: red !important; */
+ width: 100%;
+ height: auto ;
+}
+
+.member-form{
+  position: absolute;
+  width: 98%;
+  min-height: 60%;
+  height: auto;
+  backdrop-filter: blur(10px) saturate(178%) ;
+  -webkit-backdrop-filter: blur(10px) saturate(178%) ;
+  background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+  z-index: 2;
+}
+
+.member-actual-form{
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.members-individual-container{
+  padding: 1px;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  background-color: #212529f9 !important;
+  position: relative;
+}
+
+.member-all-sorting-searching-feature{
+  width: 95%;
+  height: 8%;
+  margin: auto;
+  margin-top: 1%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4%
+}
+
+.members-show-container{
+  height: 80%;
+  width: 95%;
+  margin: auto;
+  margin-top: 1%;
+  position: relative;
+  font-size: 1.0rem;
+  
+}
+
+.user-edit-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  min-height: 50%;
+  backdrop-filter: blur(16px) saturate(178%);
+  -webkit-backdrop-filter: blur(16px) saturate(178%);
+  background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+.user-main-container{
+  display: flex ;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+}
+
+.left-user-edit-details{
+  padding: 2%;
+  width: 50%;
+  min-height: 100% ; 
+}
+
+.AddUser-Edit-Container{
+  position: absolute;
+  width: 90%;
+  min-height: 80%;
+  backdrop-filter: blur(22px) saturate(178%) ;
+  -webkit-backdrop-filter: blur(22px) saturate(178%) ;
+  background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+  z-index: 1;
+  left: 5%;
+  top:1%;
+}
+
+.adduser-form-container-Outer{
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2%;
+}
+
+.adduser-form-container{
+  width: 40%;
+}
+
+.my-email-form{
+  padding: 2%;
+    margin-top: 1%;
+    width: 40%;
+    height: 100%;
+    margin-bottom: 6%;
+    border-radius: 3%;
+}
+
+.AI-DIALOG{
+  position: absolute;
+  width: 40%;
+  min-height: 60%;
+  max-height: 60%;
+  /* height: 40%; */
+  backdrop-filter: blur(82px) saturate(208%) ;
+  -webkit-backdrop-filter: blur(82px) saturate(178%) ;
+  background-color: rgba(61, 61, 61, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+  z-index: 6;
+  left: 30%;
+  top:20%;
+  padding: 1%;
+  overflow-y: auto;
+}
+
+.AI-ASK-GPT-DIALOG{
+  position: absolute;
+  width: 50%;
+  min-height: 60%;
+  max-height: 60%;
+  /* height: 40%; */
+  backdrop-filter: blur(82px) saturate(208%) ;
+  -webkit-backdrop-filter: blur(82px) saturate(178%) ;
+  background-color: rgba(61, 61, 61, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ;
+  z-index: 6;
+  left: 30%;
+  top:20%;
+  padding: 1%;
+  overflow-y: auto;
+}
+
+.para-show{
+  /* border: 2px solid red; */
+  /* backdrop-filter: blur(22px) saturate(178%) ;
+  -webkit-backdrop-filter: blur(22px) saturate(178%) ; */
+  /* background-color: rgba(74, 74, 74, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ; */
+  
+  color: white;
+  overflow-y: auto;
+
+
+}
+
+.backdrop {
+  position: absolute;
+  top: 0%;
+ width: 99.9%;
+ height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  backdrop-filter: blur(5px); /* apply blur effect */
+  -webkit-backdrop-filter: blur(22px) saturate(178%) ; 
+  z-index: 5; /* ensure it’s below the dialog but above other content */
+}
+
+
+.profile-image-container {
+  width: 100px; /* Adjust the size of the circle */
+  height: 100px; /* Adjust the size of the circle */
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #f0f0f0; /* Optional: background color to make the circle visible */
+}
+
+
+.profile-image-container2{
+  width: 25px; /* Adjust the size of the circle */
+  height: 25px; /* Adjust the size of the circle */
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #f0f0f0; /* Optional: background color to make the circle visible */
+}
+
+
+
+
+.profile-image2 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the circular area */
+}
+
+
+.right-side-user-edit-container {
+  width: 30%;
+  min-height: 22em;
+  max-height: 30em;
+  overflow: hidden; /* Ensures content stays within the container */
+  margin-bottom: 0%;
+}
+
+.major-profile-image-container {
+  width: 100%; 
+  height: 100%;
+  max-height: inherit; /* Inherit the max-height from the parent */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+.profile-image3 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the container */
+  max-height: 100%; /* Ensure the image respects the container height */
+}
+
+.mypara-content{
+  background-color:rgb(40, 37, 37);
+  padding:2%;
+   border-radius:2%;
+}
