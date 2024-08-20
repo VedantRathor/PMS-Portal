@@ -13,7 +13,7 @@ import Email from '../Email'
 import TASK_COMPLETION from '../Charts/TASK_COMPLETION'
 import TaskCompletionChart from '../Charts/TASK_TRACKING'
 import ClientSatisfactionChart from '../Charts/CLIENT_SATISFACTION'
-
+import { FiLoader } from "react-icons/fi";
 const localhost = 'http://localhost:7007'
 
 function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMVisibility, OpenMember, openMember }) {
@@ -112,13 +112,13 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
     const getProjectMembers = async () => {
       if (project_id != null) {
         const response = await axios.get(`${localhost}/project-details-members/${project_id}`)
-        const result = await response.data
-        setProjectMember(result.result[0].assignments)
-        console.log(projectMembers)
+        const result = await response.data;
+        await setProjectMember(result.result[0].assignments)
+        // console.log('projectMembers',result.result[0].assignments);
       }
 
     }
-    getProjectMembers()
+    getProjectMembers();
   }, [project_id, refresh])
 
   useEffect(() => {
@@ -134,6 +134,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
   
   return (
     <>
+    
       {openEmail ?<Email ToggleEmailVisibility={ToggleEmailVisibility} email = {email} /> : <></>}
       {navigateTask ? <div><TaskForm RefreshMe={RefreshMe} project_id={project_id} AddTaskFORMVisibility={AddTaskFORMVisibility} /></div> : <></>}
       {openMember ? <div><AddMembers RefreshMe={RefreshMe} project_id={project_id} OpenMember={OpenMember} /></div> : <></>}
@@ -157,10 +158,10 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
                 {projectMembers && projectMembers.length != 0 ? 
                 <div className='d-flex gap-4'>
                   < ProjectMembers ToggleEmailVisibility={ToggleEmailVisibility} projectMembers={projectMembers} />   
-                  <div className="d-flex flex-column " style={{width:'50%'}} >
+                  <div className="d-flex flex-column mt-5" style={{width:'50%'}} >
                     
                     <div className='d-flex justify-content-center align-items-center gap-4'>
-                    { pending_tasks != 0 || completed_tasks != 0 ?<TASK_COMPLETION pendingTasks={pending_tasks} completedTasks={completed_tasks}/> : <></> }  
+                    { pending_tasks != 0 || completed_tasks != 0 ?<TASK_COMPLETION pendingTasks={pending_tasks} completedTasks={completed_tasks}/> : <><div className='backdrop'><FiLoader/></div></> }  
                    
                    { taskData && taskData.length != 0 ? <TaskCompletionChart tasks ={taskData}/> : <></>}
                     </div>

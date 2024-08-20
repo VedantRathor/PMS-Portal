@@ -75,7 +75,39 @@ const projectDetailByproject_id = async (req, res) => {
 const memberByproject_id = async (req, res) => {
     try {
         const project_id = req.params.project_id
-        const result = await project.getProjectMembers(assignment, userinfo, project_id)
+        const result = await project.getProjectMembers(assignment, userinfo, project_id);
+        // console.log('project members',result);
+       const mp = {};
+         for( let project_member in result[0].assignments ){
+            const user_id = result[0]?.assignments[project_member].user_id;
+            const query = `
+            SELECT user_id, project_id,
+                    SUM(CASE WHEN logstatus = 'approved' THEN 1 ELSE 0 END) AS approved_count,
+                    SUM(CASE WHEN logstatus = 'pending' THEN 1 ELSE 0 END) AS pending_count,
+                    SUM(CASE WHEN logstatus = 'rejected' THEN 1 ELSE 0 END) AS rejected_count
+            FROM logs
+            WHERE user_id = :userId AND project_id = :projectId
+            GROUP BY user_id, project_id;
+            `;
+
+            const results = await db.sequelize.query(query, {
+                replacements: { userId: user_id, projectId: project_id },
+                type: QueryTypes.SELECT
+            });
+            // console.log(`user_id>>>>>>>>>>>`,results);
+            if( results?.length != 0){
+                mp[results[0].user_id] = results[0];
+            }
+         }
+        // formatting the data !
+        for( let assignment in result[0].assignments){
+            if( result[0]?.assignments[assignment]?.userinfo?.dataValues){
+                // console.log('>`>>>>>>>>>>>>', result[0]?.assignments[assignment]?.userinfo?.dataValues);
+                result[0].assignments[assignment].userinfo.dataValues.logtrack = mp[result[0].assignments[assignment].userinfo.dataValues.user_id];
+            }
+           
+        }
+
         service.successRetrievalResponse(res, 'project members retrieved', result)
     } catch (error) {
         console.log(error)

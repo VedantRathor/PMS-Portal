@@ -61,10 +61,12 @@ function Project() {
 
   return (
     <div className='project-container'>
+      
         <div className='sidebar'>
              <Sidebar OpenMember={OpenMember} AddTaskFORMVisibility={AddTaskFORMVisibility} ReverseLogId={ReverseLogId} parentFunction = {parentFunction} />
         </div>
         <div className='project-right-container'>
+      
             <ProjectDetailContainter OpenMember={OpenMember} openMember ={openMember} AddTaskFORMVisibility={AddTaskFORMVisibility} navigateTask={navigateTask} logid={logid} project_id = { project_id }/>
         </div>
     </div>

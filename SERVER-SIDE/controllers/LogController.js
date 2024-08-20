@@ -130,6 +130,20 @@ const logByproject_id = async (req, res) => {
     }
 }
 
+// const logCountByMembers =  async (req, res) => {
+//     try {
+
+//         const project_id = req.params.project_id;
+//         const limit = 2
+//         const result = await log.getLogsByProjectIdWithLimit(project, task, log, userinfo, project_id, limit);
+//         console.log('result',result);
+//         service.successRetrievalResponse(res, 'logs for a project retrieved', result)
+//     } catch (error) {
+//         console.log(error)
+//         service.serverSideError(res)
+//     }
+// }
+
 const allLogs = async (req, res) => {
     try {
 
@@ -213,5 +227,6 @@ module.exports = {
     updateLogStatus,
     logByproject_id,
     logByproject_idAndtask_id,
-    allLogs
+    allLogs,
+    // logCountByMembers
 }

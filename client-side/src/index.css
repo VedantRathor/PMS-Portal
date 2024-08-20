@@ -736,3 +736,12 @@
   padding:2%;
    border-radius:2%;
 }
+
+
+.dialogchartestimation{
+  backdrop-filter: blur(82px) saturate(208%) ;
+  -webkit-backdrop-filter: blur(82px) saturate(178%) ;
+  background-color: rgba(61, 61, 61, 0.75);
+  border-radius: 12px ;
+  border: 1px solid rgba(255, 255, 255, 0.125) ; 
+}

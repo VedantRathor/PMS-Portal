@@ -86,8 +86,9 @@ router.post('/add-log/:project_id/:task_id',authIslogin, LogController.addLogInp
 router.post('/update-log-status',authIslogin, LogController.updateLogStatus)
 router.get('/project-details-log/:project_id', LogController.logByproject_id)
 router.get('/project-details-logByTask/:project_id/:task_id' ,authIslogin, LogController.logByproject_idAndtask_id)
-router.get('/project-details-log-allLogs/:project_id/:status/:sortby', LogController.allLogs)
+router.get('/project-details-log-allLogs/:project_id/:status/:sortby', LogController.allLogs);
 
+// router.get('/project-member-investigation/:project_id', LogController.logCountByMembers);
 
 
 router.post('/generate-pdf', (req, res) => {

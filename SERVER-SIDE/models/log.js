@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
           include: [{
             model: log,
             order: [['created_at', 'DESC']], // Order by created_at field of log model
-            limit: limit,
+            // limit: limit,
             include: [{
               model: userinfo
             }],
