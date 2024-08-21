@@ -45,6 +45,8 @@ db.assignment =  require('../models/assignment')(sequelize,DataTypes)
 db.task =  require('../models/task')(sequelize,DataTypes)
 db.log =  require('../models/log')(sequelize,DataTypes)
 db.notification = require('../models/notification')(sequelize,DataTypes)
+db.attendance_management = require('../models/attendance_management')(sequelize,DataTypes) ;
+
 // user - logs
 db.userinfo.hasMany(db.log,{
   foreignKey : 'user_id'
@@ -52,6 +54,15 @@ db.userinfo.hasMany(db.log,{
 db.log.belongsTo(db.userinfo,{
   foreignKey : 'user_id'
 })
+
+//userinfo - attendance_management 
+db.userinfo.hasMany( db.attendance_management , {
+  foreignKey : 'user_id'
+});
+
+db.attendance_management.belongsTo( db.userinfo , {
+  foreignKey : 'user_id' 
+}); 
 
 // user - projects
 db.userinfo.hasMany(db.project,{

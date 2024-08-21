@@ -15,7 +15,7 @@ const ProjectController = require('../controllers/ProjectController')
 const AssignController = require('../controllers/AssignController')
 const TaskController = require('../controllers/TaskController')
 const LogController = require('../controllers/LogController')
-
+const AttendanceController = require('../controllers/AttendanceController');
 const authIslogin = require('../middlewares/authIslogin')
 const multer = require('multer');
 
@@ -42,6 +42,9 @@ const storage = multer.diskStorage({
 });
 
 var upload = multer({storage:storage});
+
+// AttendanceController 
+router.post('/api/attendance-portal/mark-attendance',AttendanceController.markAttendance);
 
 //UserController
 
