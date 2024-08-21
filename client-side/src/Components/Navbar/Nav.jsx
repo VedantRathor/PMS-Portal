@@ -70,7 +70,9 @@ function Nav({ parentFunction,changeFlag,toggleAIDialogBox , toggleAIGPTIDalogBo
           <div className='d-flex gap-3'>
             {auth ?
               <>
-              
+              <li>
+                <Link to='/attendance-portal'>attendance portal</Link>
+              </li>
               <li onClick={() => {handleAskGPTClicked()}}  >
               <div className='' style={{borderRadius:'50%'}}><CiText style={{cursor:'pointer'}} color='white' size={25}/></div> 
               </li>

@@ -16,6 +16,7 @@
     "chart.js": "^4.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "framer-motion": "^11.3.27",
     "lucide-react": "^0.427.0",
     "multer": "^1.4.5-lts.1",

@@ -745,3 +745,9 @@
   border-radius: 12px ;
   border: 1px solid rgba(255, 255, 255, 0.125) ; 
 }
+
+.attendance-form-container{
+  width: 45%;
+  height: 40%;
+  padding: 2%;
+}

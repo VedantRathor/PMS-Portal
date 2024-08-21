@@ -15,6 +15,7 @@ import AddProject from './Components/Project/AddProject/AddProject'
 import AllUsers from './Components/AllUsers/AllUsers'
 import AI_interface from './Components/AI-module/AI_interface'
 import  AI_ASK_GPT from './Components/AI-module/AI_ASK_GPT'
+import AttendanceContainer from './Components/AttendanceManagement/AttendanceContainer'
 const socket = io('http://localhost:7007');
 
 
@@ -88,6 +89,7 @@ function App() {
           <Route path="/login" element={<Login changeFlag={changeFlag} />} />
           <Route path="/add-new-project" Component={AddProject}/>
           <Route path="/All-Users" Component={AllUsers} />
+          <Route path="/attendance-portal" Component={AttendanceContainer} />
         </Routes>
       </BrowserRouter>
       <div  style={{ visibility: view ? 'visible' : 'hidden' }}><Notification refresh={refresh} loadNotification={loadNotification} view={view} /></div>
