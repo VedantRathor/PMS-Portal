@@ -19,10 +19,19 @@ const { Socket } = require('socket.io');
 const markAttendance = async(req,res) =>{
     try {
         const { which_date , check_in , check_out , total_hours, attendance_type , user_id } = req.body;
-        const result = await attendance_management.markattendance(req.body);
-        if( result != null && result != undefined )  service.successRetrievalResponse(res, 'attendance marked succesfully');
-        else  service.failRetrievalResponse(res, 'attendance cannot be marked') ;
-
+        // find that on this date, for this user, already data present or not 
+        let isPresent = await attendance_management.checkDataEntry(req.body);
+        if( isPresent == null || isPresent == undefined ){
+            const result = await attendance_management.markattendance(req.body);
+            if (result != null && result != undefined) service.successRetrievalResponse(res, 'attendance marked succesfully');
+            else service.failRetrievalResponse(res, 'attendance cannot be marked');
+        }else{
+            // update it 
+            const result = await attendance_management.updateAttendance(req.body);
+            if (result != null && result != undefined) service.successRetrievalResponse(res, 'attendance marked updated succesfully');
+            else service.failRetrievalResponse(res, 'attendance cannot be updated');
+        }
+        
     } catch (error) {
         console.log(error);
         service.serverSideError(res);
