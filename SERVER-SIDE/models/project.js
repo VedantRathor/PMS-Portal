@@ -7,25 +7,27 @@ module.exports = (sequelize, DataTypes) => {
   class project extends Model {
 
     // This Method: used to create a project by Super-Admin
-    static createProject({ project_name, project_details, manager_id }, user_id) {
+    static createProject({ project_name, project_details, manager_id }, user_id,company_id) {
       return project.create({
         project_name: project_name,
         project_details: project_details,
         manager_id: manager_id,
         created_by: user_id,
         status: 'pending',
-        updated_by: user_id
+        updated_by: user_id,
+        company_id : company_id
       })
     }
 
     // This Method: used to retrieve project-detail
-    static getProjectDetails(userinfo, project_id) {
+    static getProjectDetails(userinfo, project_id, company_id) {
       return project.findAll({
         include: [{
           model: userinfo,
         }],
         where: {
           project_id: project_id,
+          company_id : company_id
           // manager_id: manager_id
         }
 
@@ -33,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     // This Method: used to get all the members involved in a project
-    static getProjectMembers(assignment,userinfo,project_id) {
+    static getProjectMembers(assignment,userinfo,project_id,company_id) {
       return project.findAll({
         include: [{
           model: assignment,
@@ -44,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
         }],
         where: {
           project_id: project_id,
+          company_id : company_id
           // manager_id: manager_id
         }
       })
@@ -161,6 +164,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     updated_by: {
       type: DataTypes.INTEGER
+    },
+    company_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false  // or allowNull: true if it is optional
     },
     status: DataTypes.STRING
   }, {

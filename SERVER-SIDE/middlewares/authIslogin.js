@@ -3,6 +3,7 @@ const db = require('../models/index')
 const userinfo = db.userinfo 
 
 const authIslogin = async(req,res,next) => {
+  console.log('iam called');
   try {
     const token = req.get('Authorization').split(' ')[1]
     console.log(token)

@@ -16,6 +16,7 @@ const AssignController = require('../controllers/AssignController')
 const TaskController = require('../controllers/TaskController')
 const LogController = require('../controllers/LogController')
 const AttendanceController = require('../controllers/AttendanceController');
+const CompanyController = require('../controllers/CompanyController');
 const authIslogin = require('../middlewares/authIslogin')
 const multer = require('multer');
 
@@ -43,14 +44,18 @@ const storage = multer.diskStorage({
 
 var upload = multer({storage:storage});
 
+//CompanyContorller
+router.post('/api/company-controller/register-company',CompanyController.registerCompany);
+
 // AttendanceController 
 router.post('/api/attendance-portal/mark-attendance',AttendanceController.markAttendance);
+router.get('/api/attendance-portal/get-attendance' , authIslogin ,  AttendanceController.getAttendance) ; 
 
-//UserController
 
 //NOtification 
 router.get('/notification/:view',authIslogin, UserController.getNotifications)
 
+//UserController
 router.post('/Login',UserController.loginUserByEmailPass)
 router.post('/register',authIslogin, UserController.adduser)
 router.get('/api/allusers',authIslogin,UserController.getAllUsers) ;
@@ -59,16 +64,16 @@ router.post('/update-user-profile',authIslogin,upload.single("profileImage"),Use
 
 
 //ProjectController
-router.post('/add-new-project',authIslogin,ProjectController.addNewProject)
-router.post('/project-update/:project_id',ProjectController.updateProjectStatus)
+router.post('/add-new-project',authIslogin,ProjectController.addNewProject);
+router.post('/project-update/:project_id',authIslogin,ProjectController.updateProjectStatus);
 
 router.get('/project',authIslogin,ProjectController.getProjectBymanager_id)
 router.get('/project-sort', authIslogin ,ProjectController.getProjectByStatus)
 router.get('/project-order' , authIslogin , ProjectController.getProjectByOrder)
 router.get('/project/query',authIslogin,ProjectController.getProjectByproject_name)
-router.get('/manager',ProjectController.getManagers)
-router.get('/project-details-project/:project_id', ProjectController.projectDetailByproject_id)
-router.get('/project-details-members/:project_id', ProjectController.memberByproject_id)
+router.get('/manager',authIslogin,ProjectController.getManagers)
+router.get('/project-details-project/:project_id',authIslogin,ProjectController.projectDetailByproject_id)
+router.get('/project-details-members/:project_id', authIslogin,ProjectController.memberByproject_id)
 router.get('/project/members/not-invlolved/:project_id' , ProjectController.getMemberByproject_idNotInvolved)
 
 //AssignController

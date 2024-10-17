@@ -135,6 +135,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TIME
     },
     logstatus: DataTypes.STRING,
+    company_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false  // or allowNull: true if it is optional
+    },
     approved_by: {
       type: DataTypes.INTEGER,
 

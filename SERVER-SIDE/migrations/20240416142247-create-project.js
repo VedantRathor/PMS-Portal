@@ -39,6 +39,10 @@ module.exports = {
       },
       updated_by:{
         type : Sequelize.INTEGER
+      },
+      company_id : {
+        allowNull : false,
+        type: Sequelize.INTEGER
       }
     });
   },

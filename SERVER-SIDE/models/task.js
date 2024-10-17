@@ -90,7 +90,11 @@ module.exports = (sequelize, DataTypes) => {
       type : DataTypes.TIME,
       allowNull : false 
     },
-    status: DataTypes.STRING
+    status: DataTypes.STRING,
+    company_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false  // or allowNull: true if it is optional
+    },
   }, {
     sequelize,
     modelName: 'task',

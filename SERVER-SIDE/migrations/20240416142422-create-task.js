@@ -41,6 +41,10 @@ module.exports = {
       estimate_time : {
         type : Sequelize.TIME,
         allowNull : false 
+      },
+      company_id : {
+        allowNull : false,
+        type: Sequelize.INTEGER
       }
     });
   },

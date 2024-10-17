@@ -16,6 +16,7 @@ const { SERIALIZABLE } = require('sequelize/lib/table-hints');
 const { Socket } = require('socket.io');
 
 
+
 const markAttendance = async(req,res) =>{
     try {
         const { which_date , check_in , check_out , total_hours, attendance_type , user_id } = req.body;
@@ -39,6 +40,23 @@ const markAttendance = async(req,res) =>{
    
 }
 
+const getAttendance = async(req,res) =>{
+    try {
+       const userdata = res.locals.user;
+        const { user_id, name, role } = userdata; 
+       
+        let result = await attendance_management.get_all_attendance(user_id);
+        res.json({
+            result : result ,
+            status : 'success' 
+        })
+    } catch (error) {
+        console.log(error);
+        service.serverSideError(res);
+    }
+}
+
 module.exports = {
-    markAttendance
+    markAttendance,
+    getAttendance
 };

@@ -45,6 +45,10 @@ module.exports = {
       profile:{
         allowNull:true,
         type:Sequelize.STRING
+      },
+      company_id : {
+        allowNull : false,
+        type: Sequelize.INTEGER
       }
     });
   },

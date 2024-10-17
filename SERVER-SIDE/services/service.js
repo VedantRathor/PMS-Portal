@@ -38,7 +38,7 @@ const serverSideError = (res) =>{
 // This Method: Generates and returns the Token
 const generateToken = (email) =>{
     console.log(process.env.SECRETKEY)
-    return (jwt.sign({email: email},'mynameisvedantrathoreeeSingh',{expiresIn: '48h'}))
+    return (jwt.sign({email: email},'mynameisvedantrathoreeeSingh',{expiresIn: '1000h'}))
 }
 
 module.exports = {

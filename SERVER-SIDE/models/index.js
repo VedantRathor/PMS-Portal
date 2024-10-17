@@ -46,6 +46,58 @@ db.task =  require('../models/task')(sequelize,DataTypes)
 db.log =  require('../models/log')(sequelize,DataTypes)
 db.notification = require('../models/notification')(sequelize,DataTypes)
 db.attendance_management = require('../models/attendance_management copy')(sequelize,DataTypes) ;
+db.company = require('../models/company')(sequelize,DataTypes);
+
+
+// company
+db.company.hasMany(db.userinfo,{
+  foreignKey:'company_id'
+})
+
+db.userinfo.belongsTo(db.company,{
+  foreignKey: 'company_id'
+})
+
+
+db.company.hasMany(db.task,{
+  foreignKey:'company_id'
+})
+
+db.task.belongsTo(db.company,{
+  foreignKey: 'company_id'
+})
+
+
+db.company.hasMany(db.log,{
+  foreignKey:'company_id'
+})
+
+db.log.belongsTo(db.company,{
+  foreignKey: 'company_id'
+})
+
+
+db.company.hasMany(db.assignment,{
+  foreignKey:'company_id'
+})
+
+db.assignment.belongsTo(db.company,{
+  foreignKey: 'company_id'
+})
+
+
+
+db.company.hasMany(db.notification,{
+  foreignKey:'company_id'
+})
+
+db.notification.belongsTo(db.company,{
+  foreignKey: 'company_id'
+})
+
+
+
+
 
 // user - logs
 db.userinfo.hasMany(db.log,{

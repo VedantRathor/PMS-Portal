@@ -22,7 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id: DataTypes.INTEGER,
     notification: DataTypes.TEXT,
-    read: DataTypes.INTEGER
+    read: DataTypes.INTEGER,
+    company_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false  // or allowNull: true if it is optional
+    },
   }, {
     sequelize,
     modelName: 'Notification',

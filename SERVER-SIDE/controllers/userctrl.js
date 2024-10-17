@@ -7,6 +7,7 @@ const project = db.project
 const assignment = db.assignment
 const task = db.task
 const log = db.log
+const company = db.company;
 const notification = db.notification
 const service = require('../services/service')
 const jwt = require('jsonwebtoken')
@@ -14,12 +15,13 @@ const authIslogin = require('../middlewares/authIslogin');
 const { SERIALIZABLE } = require('sequelize/lib/table-hints');
 
 
+
 // This Method: Registers the user
 const adduser = async (req, res) => {
     try {
         const userdata = res.locals.user ;
-        const { user_id } = userdata ;
-        const {  email, password, ucpassword , name } = req.body
+        const { user_id, company_id} = userdata ;
+        const {  email, password, ucpassword , name } = req.body;
         console.log(req.body)
         // FindUser - finds the user if having email already
         const emailExists = await userinfo.FindUser(email);
@@ -27,14 +29,15 @@ const adduser = async (req, res) => {
             if (password == ucpassword) {
                 const token = service.generateToken(email);
                 // create user 
-                const result = await userinfo.createUser(req.body, token);
-                const allUsers = await userinfo.findAll({attributes:['user_id']}) ;
+                const result = await userinfo.createUser(req.body, token,company_id);
+                const allUsers = await userinfo.findAll({where:{company_id:company_id}},{attributes:['user_id']}) ;
                 // console.log(allUsers);
                 allUsers.map(async(eachUser) =>{
                     await notification.create({
                         user_id : eachUser.user_id,
                         notification : `Welcoming ${name}😍. ${req.body.aboutUser}`,
-                        read : 0
+                        read : 0,
+                        company_id:company_id
                     })
                 })
                 // send full response to the client exluding email password 
@@ -54,16 +57,18 @@ const adduser = async (req, res) => {
 // This Method: Used for authentication and Login.
 const loginUserByEmailPass = async (req, res) => {
     try {
-        const { email, password } = req.body
-        const emailExists = await userinfo.FindUser(email)
+        const { email, password , company_registration_number} = req.body;
+        const CompanyId = await company.findOne({where:{company_registration_number:company_registration_number}});
+        if( CompanyId){
+            const emailExists = await userinfo.FindUser(email,CompanyId.company_id);
 
         if (emailExists != null) {
             // check for password ! 
             if (password == emailExists.password) {
                 // generate token 
-                const token = service.generateToken(email)
+                const token = await service.generateToken(email);
                 // update it 
-                await userinfo.updateUser(token, emailExists.email)
+                await userinfo.updateUser(token, emailExists.email);
                 let result = emailExists
                 service.successRetrievalResponse(res, 'login succesful', result)
 
@@ -73,6 +78,10 @@ const loginUserByEmailPass = async (req, res) => {
         } else {
             service.failRetrievalResponse(res, 'email doesnot exists')
         }
+        }else{
+            service.failRetrievalResponse(res,'company id is wrong');
+        }
+        
 
     } catch (error) {
         console.log(error)
@@ -98,10 +107,10 @@ async function UpdateDetails(req, res) {
 const getNotifications = async(req,res) =>{
     try {
         const userdata = res.locals.user ;
-        const {user_id , role , name } = userdata ;
+        const {user_id , role , name , company_id} = userdata ;
         // console.log(user_id,role,name)
         const result = await notification.findAll({where : {
-            user_id : user_id 
+            user_id : user_id , company_id : company_id
         },order:[['created_at','DESC']]})
        
         const {view} = req.params
@@ -112,7 +121,8 @@ const getNotifications = async(req,res) =>{
                read : 1 
           },{
             where : {
-              user_id : user_id 
+              user_id : user_id ,
+              company_id : company_id
             }
           })
         }
@@ -126,9 +136,9 @@ const getNotifications = async(req,res) =>{
 
 const getAllUsers = async(req,res) =>{
  try {
-    const result = await userinfo.findAll({where:{role:{
-        [Op.ne] : 1
-    }},
+    const userdata = res.locals.user;
+    const {company_id} = userdata;
+    const result = await userinfo.findAll({where:{role:{[Op.ne] : 1},company_id : company_id },
     attributes:['name','email','created_at','updated_at','role','user_id','profile']
    })
    
@@ -141,6 +151,8 @@ const getAllUsers = async(req,res) =>{
 
 const updateUserInfo = async(req,res) => {
     try {
+        const userdata = res.locals.user;
+        const {company_id} = userdata;
         const {name,role,current_password,new_password,email} = req.body ;
         if( role == 0 ){
             service.failRetrievalResponse(res,'Please Select Valid Role') ;
@@ -159,7 +171,8 @@ const updateUserInfo = async(req,res) => {
                             role : role
                         },{
                             where : {
-                                user_id : result[0].user_id 
+                                user_id : result[0].user_id ,
+                                company_id : company_id
                             }
                         })
                         service.successRetrievalResponse(res,'Updation Succesfull') ;
@@ -189,13 +202,15 @@ const updateUserInfo = async(req,res) => {
 const update_user_profile = async(req,res) => {
 
     try {
+        const userdata = res.locals.user;
+        const {company_id} = userdata;
         const {role,email} = req.body ;
         let profileImage = req.file.originalname;
     
         if( role == 0 ){
             service.failRetrievalResponse(res,'Please Select Valid Role') ;
         }else{
-            const result = await userinfo.findAll({where:{email:email}}) ;
+            const result = await userinfo.findAll({where:{email:email,company_id:company_id}}) ;
                 if( result.length == 0 ){
                    service.failRetrievalResponse(res,'User Does not Exists') ;
                 }else{
@@ -205,7 +220,8 @@ const update_user_profile = async(req,res) => {
                            profile : profileImage
                         },{
                             where : {
-                                user_id : result[0].user_id 
+                                user_id : result[0].user_id ,
+                                company_id:company_id
                             }
                         });
                         service.successRetrievalResponse(res,'Updation Succesfull') ; 

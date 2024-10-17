@@ -36,7 +36,11 @@ module.exports = (sequelize, DataTypes) => {
     manager_id: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
+    },
+    company_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false  // or allowNull: true if it is optional
+    },
   }, {
     sequelize,
     modelName: 'assignment',

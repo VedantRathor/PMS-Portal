@@ -19,10 +19,13 @@ const { Socket } = require('socket.io');
 
 const addNewProject = async (req, res) => {
    
-    const userdata = res.locals.user
-    const { user_id } = userdata
+    
     try {
-        const result = await project.createProject(req.body, user_id)
+        const userdata = res.locals.user;
+        const { user_id,company_id } = userdata;
+        console.log('companyid: ',company_id);
+        const result = await project.createProject(req.body, user_id,company_id);
+        console.log('result: ',result);
         if (result != null) {
             // here i want to emit the event ! 
             
@@ -39,12 +42,14 @@ const addNewProject = async (req, res) => {
             await notification.create({
                 user_id : manager_id ,
                 notification : `Project: ${req.body.project_name} assigned to you by admin`,
-                read : 0 
+                read : 0 ,
+                company_id:company_id
             })
             await notification.create({
                 user_id : user_id,
                 notification : `You added a new project: ${req.body.project_name}`,
-                read : 0 
+                read : 0 ,
+                company_id:company_id
             })
 
             service.successRetrievalResponse(res, 'project created succesfully')
@@ -61,9 +66,12 @@ const addNewProject = async (req, res) => {
 const projectDetailByproject_id = async (req, res) => {
     try {
         // assuming I know my id, name user_id = 1 
-        const project_id = req.params.project_id
+        const userdata = res.locals.user;
+        const {company_id} = userdata;
+
+        const {project_id} = req.params;
         // const manager_id = 1
-        const result = await project.getProjectDetails(userinfo, project_id)
+        const result = await project.getProjectDetails(userinfo, project_id,company_id)
         service.successRetrievalResponse(res, 'project details retrieved', result)
     } catch (error) {
         console.log(error)
@@ -74,8 +82,11 @@ const projectDetailByproject_id = async (req, res) => {
 // this method: Retrieves the number of members(Employees) in a project
 const memberByproject_id = async (req, res) => {
     try {
+        const userdata = res.locals.user;
+        const {company_id} = userdata;
+        
         const project_id = req.params.project_id
-        const result = await project.getProjectMembers(assignment, userinfo, project_id);
+        const result = await project.getProjectMembers(assignment, userinfo, project_id,company_id);
         // console.log('project members',result);
        const mp = {};
          for( let project_member in result[0].assignments ){
@@ -134,15 +145,18 @@ const updateProjectStatus = async (req, res) => {
 // this method: Retrieves all the projects in which a person with user_id is involved
 const getProjectBymanager_id = async (req, res) => {
     try {
-        const userdata = res.locals.user
-        const { user_id, name, role } = userdata
+        const userdata = res.locals.user;
+        const { user_id, name, role ,company_id} = userdata
         let query = {
             include: [{ model: userinfo, attributes: ['name'] }],
         }
         if (role == 1 || role == 2) {
+            if( role == 1){
+                query.where = { company_id};
+            }
             if (role == 2) {
                 // where condition - manager_id = user_id
-                query.where = { manager_id: user_id }
+                query.where = { manager_id: user_id , company_id};
             }
             const result = await project.findAll(query)
             service.successRetrievalResponse(res, 'projects retrieved', result)
@@ -247,7 +261,9 @@ const getProjectByproject_name = async (req, res) => {
 // this method: Retrieves all the managers only 
 const getManagers = async (req, res) => {
     try {
-        const result = await userinfo.getManagers()
+        const userdata = res.locals.user ;
+        const {company_id} = userdata;
+        const result = await userinfo.getManagers(company_id);
         if (result != null) {
             service.successRetrievalResponse(res, 'manager retrieved', result)
         } else {

@@ -68,6 +68,10 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static get_all_attendance(user_id){
+      return attendance_management.findAll({ where: { user_id: user_id } })
+    }
+
     
 
   }
