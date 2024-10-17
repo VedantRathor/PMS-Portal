@@ -12,7 +12,7 @@ import { IoMdAddCircle } from "react-icons/io";
 const localhost = 'http://localhost:7007'
 function AddProject() {
   let auth = localStorage.getItem('user')
-  auth = JSON.parse(auth)
+  auth = JSON.parse(auth);
   const navigate = useNavigate()
   const [selectedValue, setSelectedValue] = useState('')
   const [project_name, setPname] = useState()
@@ -22,7 +22,11 @@ function AddProject() {
   useEffect(() => {
     const getProjectManagers = async () => {
       try {
-        let resposne = await axios.get(`${localhost}/manager`)
+        let resposne = await axios.get(`${localhost}/manager`,{
+          headers:{
+            Authorization:`Bearer ${auth.result.token}`
+          }
+        })
         let result = await resposne.data
         console.log(result)
         if (result.status == 'unsuccess') {

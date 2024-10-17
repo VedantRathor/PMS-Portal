@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState }  from 'react'
 import { IoIosPeople } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import AllUserDisplay from './AllUserDisplay';
@@ -7,6 +7,7 @@ import UserEditContainer from './UserEditContainer';
 import AddUser from './AddUser';
 import Email from '../Email'
 const localhost = 'http://localhost:7007'
+
 
 function AllUsers() {
     let auth = localStorage.getItem('user') ;
@@ -17,6 +18,7 @@ function AllUsers() {
     const [refreshMe , setRefreshMe] = useState(false) ;
     const [openEmail, setEmailVisibility] = useState(false);
     const [email,setEmail] = useState('')
+
 
     const ToggleUserEcVisibility = () =>{
         setUserEcVisibility(!UserEcVisibility);
@@ -56,6 +58,7 @@ function AllUsers() {
 
     return (
         <div className='members-individual-container' style={{zIndex:'1'}}>
+            
         {openEmail ?<Email ToggleEmailVisibility={ToggleEmailVisibility} email = {email} /> : <></>}
           {AddUserVisibility == true ?<AddUser RefreshMe={RefreshMe} ToggleAddUserVisibility={ToggleAddUserVisibility} />  : <></>}
             <h4 className='text-white text-center mt-2 d-flex justify-content-center align-items-center gap-2'>All Members <IoIosPeople size={30} color='yellow' /></h4>

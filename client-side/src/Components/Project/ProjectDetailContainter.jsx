@@ -62,7 +62,11 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
   useEffect(() => {
     const getSingleProjectData = async () => {
       if (project_id != null) {
-        const response = await axios.get(`${localhost}/project-details-project/${project_id}`)
+        const response = await axios.get(`${localhost}/project-details-project/${project_id}`,{
+          headers : {
+            "Authorization" : `Bearer ${auth.result.token}`
+        }
+        })
         const result = await response.data
         setSingleProjectData(result.result[0])
 
@@ -111,7 +115,11 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
   useEffect(() => {
     const getProjectMembers = async () => {
       if (project_id != null) {
-        const response = await axios.get(`${localhost}/project-details-members/${project_id}`)
+        const response = await axios.get(`${localhost}/project-details-members/${project_id}`,{
+          headers : {
+            "Authorization" : `Bearer ${auth.result.token}`
+        }
+        })
         const result = await response.data;
         await setProjectMember(result.result[0].assignments)
         // console.log('projectMembers',result.result[0].assignments);

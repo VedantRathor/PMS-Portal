@@ -12,15 +12,18 @@ const Login = ({changeFlag}) => {
     const auth = localStorage.getItem('user')
     if (auth != null) navigate('/')
   })
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [company_registration_number,setCompanyRegistrationNumber] = useState(0);
 
   const handleEmail = (e) => { setEmail(e.target.value) }
   const handlePassword = (e) => { setPassword(e.target.value) }
+  const handleCompanyRegistrationNumber = (e) => { setCompanyRegistrationNumber(e.target.value)};
 
   const handleForm = async (e) => {
     e.preventDefault()
     let response = await axios.post('http://localhost:7007/Login', {
+      company_registration_number : parseInt(company_registration_number),
       password: password,
       email: email
     }, {
@@ -43,6 +46,12 @@ const Login = ({changeFlag}) => {
       <div className="form-container">
       <h1 style={{zIndex:'1'}} className="text-white d-flex align-items-center gap-2"><IoLogIn color="yellow"/> Portal Login</h1>
       <form onSubmit={handleForm} class="g-3 myform bg-dark text-light">
+
+          <div class="col-md-10 mb-3">
+            <label for="company_registration_number" class="form-label d-flex align-items-center gap-1"><MdEmail size={20} />Registration Number</label>
+            <input onChange={handleCompanyRegistrationNumber}  class="form-control" id="company_registration_number" />
+          </div>
+
         <div class="col-md-10 mb-3">
           <label for="email" class="form-label d-flex align-items-center gap-1"><MdEmail size={20}/> Email</label>
           <input onChange={handleEmail} type="email" class="form-control" id="email" />

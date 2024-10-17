@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import CalendarContainer from '../Attendance/CalendarContainer';
+import { RxCross1 } from "react-icons/rx";
 
 const localhost = 'http://localhost:7007'
 dayjs.extend(duration);
@@ -16,7 +18,15 @@ function AttendanceContainer() {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [totalHours, setTotalHours] = useState(0);
-  const [status, setStatus] = useState('n');
+  const [status, setStatus] = useState('wfo');
+  let [clickedDate , setClickeddate ] = useState(null) ;
+  let [visibility , setVisibility ] = useState(false) ;
+  let [refresh , setRefresh] = useState(false) ;
+  const parentFunctionToSetDate = (received_date) => {
+    setVisibility(!visibility) ;
+    console.log('date' , received_date ); 
+    setDate(received_date);
+  }
 
   useEffect(() => {
     if( auth ){
@@ -47,81 +57,97 @@ function AttendanceContainer() {
         }, 
     });
     let result = await response.data ;
-    console.log('result' , result);
+    if( result.status == 'success') { setRefresh(!refresh) ; }
+    setVisibility(false);
   };
+  
   return (
-    <div>
-      <form className='attendance-form-container' onSubmit={handleSubmit}>
-        <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Choose date</label>
-          <div className="col-sm-10">
-            <input
-              type="date"
-              className="form-control"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+    <div className='calendar-conatiner d-flex' style={{width:'100% ', minHeight :'100%' }} >
+     
+      <div style={{width:'70%',height:'20%',margin:'1%'}}>
+      <CalendarContainer refresh = {refresh} parentFunctionToSetDate = {parentFunctionToSetDate} />
+      </div>
+      { visibility ?
+      <div className='backdrop'>
+   <div className='attendance-form-container'>
+   <RxCross1 onClick={() => { setVisibility(false) }} size={40} color='red' style={{ cursor: 'pointer', borderRadius: '20px', padding: '5px' }} />
+        <form className='d-flex  flex-column gap-3' onSubmit={handleSubmit}>
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label text-white">Choose date</label>
+            <div className="col-sm-10">
+              <input
+              disabled
+                type="date"
+                className="form-control"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Check In</label>
-          <div className="col-sm-10">
-            <input
-              type="time"
-              className="form-control"
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-            />
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label text-white">Check In</label>
+            <div className="col-sm-10">
+              <input
+                type="time"
+                className="form-control"
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Check Out</label>
-          <div className="col-sm-10">
-            <input
-              type="time"
-              className="form-control"
-              value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-            />
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label text-white">Check Out</label>
+            <div className="col-sm-10">
+              <input
+                type="time"
+                className="form-control"
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Total hours</label>
-          <div className="col-sm-10">
-            <div className="form-control">{totalHours.toFixed(2)}</div>
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label text-white">Total hours</label>
+            <div className="col-sm-10">
+              <div className="form-control">{totalHours.toFixed(2)}</div>
+            </div>
           </div>
-        </div>
 
-        <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Status</label>
-          <div className="col-sm-10">
-            <div className="form-control">
-              <div className="dropdown">
-                <select
-                  className="dropdown"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="n" className="dropdown-item">Status</option>
-                  <option value="wfo" className="dropdown-item">Work from Office</option>
-                  <option value="wfh" className="dropdown-item">Work from Home</option>
-                  <option value="leavesl" className="dropdown-item">Sick leave</option>
-                  <option value="leavecl" className="dropdown-item">Casual leave</option>
-                </select>
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label text-white">Status</label>
+            <div className="col-sm-10">
+              <div className="form-control">
+                <div className="dropdown">
+                  <select
+                    className="dropdown"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                  
+                    <option value="wfo" className="dropdown-item">Work from Office</option>
+                    <option value="wfh" className="dropdown-item">Work from Home</option>
+                    <option value="leavesl" className="dropdown-item">Sick leave</option>
+                    <option value="leavecl" className="dropdown-item">Casual leave</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="form-group row">
-          <div className="col-sm-10">
-            <button type="submit" className="btn btn-success">Submit</button>
+          <div className="form-group row">
+            <div className="col-sm-10">
+              <button  style={{float:'right'}} type="submit" className="btn btn-success">Submit</button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div> 
+      </div>
+   : <></>}
+      
+    
     </div>
   );
 }
