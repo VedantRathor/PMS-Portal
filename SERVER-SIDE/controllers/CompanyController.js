@@ -13,7 +13,7 @@ const service = require('../services/service')
 const jwt = require('jsonwebtoken')
 const authIslogin = require('../middlewares/authIslogin');
 const { SERIALIZABLE } = require('sequelize/lib/table-hints');
-const { Socket } = require('socket.io');
+// const { Socket } = require('socket.io');
 
 
 const registerCompany = async (req, res) => {
@@ -56,7 +56,21 @@ const registerCompany = async (req, res) => {
                             }
                         )
                         result.company_id = CompanyId.company_id;
-                        service.successRetrievalResponse(res,'company and admin is registered',result);
+                        const retResponseData = {
+                            name : result.name,
+                            email : result.email,
+                            created_by : result.user_id,
+                            created_at : result.created_at,
+                            company_id : CompanyId.company_id,
+                            company_name : CompanyId.company_name,
+                            role : result.role,
+                            updated_at : result.updated_at,
+                            user_id:result.user_id,
+                            token:result.token
+
+                        }
+                        // result.company_name = CompanyId.company_name;
+                        service.successRetrievalResponse(res,'company and admin is registered',retResponseData);
                         
                     }else{
                         service.failRetrievalResponse(res, 'Some error occured in creating user, please try again!')

@@ -1,10 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 const pdfParse = require('pdf-parse');
 const { Client } = require("@octoai/client");
-const OCTO_TOKEN = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjNkMjMzOTQ5In0.eyJzdWIiOiI1MjRkMDUzNy00MTE5LTRmOTgtODc1MC1lNjZmNzU4NWVmYTIiLCJ0eXBlIjoidXNlckFjY2Vzc1Rva2VuIiwidGVuYW50SWQiOiI2MThiNTUxNC0yM2Y0LTQ0NDYtYmJkZS02MWZhMDM2MTU4ZjAiLCJ1c2VySWQiOiIzZmZkZDdlZC0xMWFmLTQ3YzgtYTRiOC01MmY3OWI2NWEzYmIiLCJhcHBsaWNhdGlvbklkIjoiYTkyNmZlYmQtMjFlYS00ODdiLTg1ZjUtMzQ5NDA5N2VjODMzIiwicm9sZXMiOlsiRkVUQ0gtUk9MRVMtQlktQVBJIl0sInBlcm1pc3Npb25zIjpbIkZFVENILVBFUk1JU1NJT05TLUJZLUFQSSJdLCJhdWQiOiIzZDIzMzk0OS1hMmZiLTRhYjAtYjdlYy00NmY2MjU1YzUxMGUiLCJpc3MiOiJodHRwczovL2lkZW50aXR5Lm9jdG8uYWkiLCJpYXQiOjE3MjM1NjExMzd9.JqpdCyuX-FThCe60igE_0s2o3f38EOvjkOmV2FaFaUiiV4RHYjw-s7SOfsASzFd-G2pPsQM_xxZzWCMJ0tab8KIjG443rZfUMN0hY5eeYg7aWcMD2v2qlQE44e_OQp8O7V7heuXpVPl0x2VD0PuVDMuUYv63ZeRHeZIokZrH-42T8-G8Lv2m4cLfQ7K8DwL4c2UQVSShUTAGC_fPQ9xESVA9faoOWhAiO2_MfkHerYPGHK360wAkIvRtMAZYzs4mXZ03cQtoGr4TCwPeu70-noxdPIKOSpoia4ePzA0xG2Y2u2wfa3w_fIeM62uv0q1DcoGV36mG-4lPQpW5SIdC5g';
+const OCTO_TOKEN = process.env.OCTA_TOKEN;
 
 const client = new Client(OCTO_TOKEN);
 const router = express.Router()
@@ -25,25 +26,26 @@ router.use(express.json())
 router.use(bodyParser.urlencoded({extended:false}))
 router.use(express.urlencoded({extended:false}))
 
+const uploadDir = path.join(__dirname, '../storage/uploads');
+
+// Check if the directory exists, if not, create it
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let folder = "./files"; // Default folder for PDFs
-
-    if (file.mimetype.startsWith("image")) {
-      folder = "./uploads"; // Folder for images
-    }
+    let folder = uploadDir; // Set the folder to the volume path for images
 
     cb(null, folder);
   },
   filename: function (req, file, cb) {
     const uniqueName = Date.now() + '-' + file.originalname;
-    file.originalname = uniqueName;
     cb(null, uniqueName);
   },
 });
 
-var upload = multer({storage:storage});
-
+var upload = multer({ storage: storage });
 //CompanyContorller
 router.post('/api/company-controller/register-company',CompanyController.registerCompany);
 
@@ -61,6 +63,7 @@ router.post('/register',authIslogin, UserController.adduser)
 router.get('/api/allusers',authIslogin,UserController.getAllUsers) ;
 router.post('/update-user',authIslogin,UserController.updateUserInfo) ;
 router.post('/update-user-profile',authIslogin,upload.single("profileImage"),UserController.update_user_profile) ;
+router.post('/upload-video',authIslogin,upload.single("videoName"), UserController.uploadVideo );
 
 
 //ProjectController
@@ -74,7 +77,7 @@ router.get('/project/query',authIslogin,ProjectController.getProjectByproject_na
 router.get('/manager',authIslogin,ProjectController.getManagers)
 router.get('/project-details-project/:project_id',authIslogin,ProjectController.projectDetailByproject_id)
 router.get('/project-details-members/:project_id', authIslogin,ProjectController.memberByproject_id)
-router.get('/project/members/not-invlolved/:project_id' , ProjectController.getMemberByproject_idNotInvolved)
+router.get('/project/members/not-invlolved/:project_id' , authIslogin,ProjectController.getMemberByproject_idNotInvolved)
 
 //AssignController
 router.post('/assignment',authIslogin,AssignController.assignMembers)
@@ -83,7 +86,6 @@ router.post('/assignment',authIslogin,AssignController.assignMembers)
 //TaskController
 router.post('/task',authIslogin,TaskController.createTask)
 router.post('/update-task-status',authIslogin,TaskController.updateTaskStatus)
-
 router.get('/project-details-task/:project_id', authIslogin,TaskController.taskByproject_id)
 router.get('/project-details-task/query/:project_id',authIslogin,TaskController.taskBySearchQuery)
 
@@ -92,9 +94,9 @@ router.get('/project-details-task/query/:project_id',authIslogin,TaskController.
 //LogController
 router.post('/add-log/:project_id/:task_id',authIslogin, LogController.addLogInproject_idAndtask_id)
 router.post('/update-log-status',authIslogin, LogController.updateLogStatus)
-router.get('/project-details-log/:project_id', LogController.logByproject_id)
+router.get('/project-details-log/:project_id', authIslogin,LogController.logByproject_id)
 router.get('/project-details-logByTask/:project_id/:task_id' ,authIslogin, LogController.logByproject_idAndtask_id)
-router.get('/project-details-log-allLogs/:project_id/:status/:sortby', LogController.allLogs);
+router.get('/project-details-log-allLogs/:project_id/:status/:sortby',authIslogin, LogController.allLogs);
 
 // router.get('/project-member-investigation/:project_id', LogController.logCountByMembers);
 

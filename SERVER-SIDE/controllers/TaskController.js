@@ -17,8 +17,8 @@ const notification = db.notification
 const createTask = async (req, res) => {
     try {
         const userdata = res.locals.user
-        const { user_id } = userdata
-        const result = await task.createTask(req.body, user_id)
+        const { user_id , company_id} = userdata
+        const result = await task.createTask(req.body, user_id,company_id)
         service.successRetrievalResponse(res, 'task created', result)
     } catch (error) {
         console.log(error)
@@ -30,31 +30,33 @@ const createTask = async (req, res) => {
 const updateTaskStatus = async (req, res) => {
     try {
         const userdata = res.locals.user
-        const { user_id , name } = userdata;
+        const { user_id , name,company_id } = userdata;
         // console.log(req.body.project_id)
         // now we do not have field in task database to record , who has updated this, whether a manager or super admin
-        const result = await task.updateTaskStatus(req.body, user_id)
+        const result = await task.updateTaskStatus(req.body, user_id,company_id)
         if (result != null && result != undefined ) {
-            const allAdmins = await userinfo.findAll({where:{role:1},attributes:['user_id']}) ;
+            const allAdmins = await userinfo.findAll({where:{role:1,company_id:company_id},attributes:['user_id']}) ;
             const allUsers = await userinfo.findAll({
                 require : true,
                 include:[{
                     model:assignment,
                     attributes : [],
                     where:{
-                        project_id : req.body.project_id 
+                        project_id : req.body.project_id ,
+                        company_id : company_id
                     }
                 }],
                 attributes:['user_id']
             }) ;
-            const projectdata = await project.findAll({where:{project_id:req.body.project_id},attributes:['project_name']})
-            const taskdata = await task.findAll({where:{task_id:req.body.task_id},attributes:['task_name']})
+            const projectdata = await project.findAll({where:{project_id:req.body.project_id,company_id:company_id},attributes:['project_name']})
+            const taskdata = await task.findAll({where:{task_id:req.body.task_id,company_id:company_id},attributes:['task_name']})
           
             allAdmins.map(async(eachAdmin)=>{
                 await notification.create({
                     user_id : eachAdmin.user_id,
                     notification : `${name} updated task-status: ${req.body.status} of Project: ${projectdata[0].project_name},Task: ${taskdata[0].task_name}`,
-                    read : 0 
+                    read : 0 ,
+                    company_id:company_id
                 })
             })
 
@@ -62,14 +64,16 @@ const updateTaskStatus = async (req, res) => {
                    await notification.create({
                        user_id : eachUser.user_id,
                        notification : `${name} updated task-status: ${req.body.status} of Project: ${projectdata[0].project_name}, Task: ${taskdata[0].task_name}`,
-                       read:0
+                       read:0,
+                       company_id:company_id
                    })
                })
 
                await notification.create({
                 user_id : user_id,
                 notification : `You updated task-status: ${req.body.status} of Project: ${projectdata[0].project_name} Task: ${taskdata[0].task_name}`,
-                read:0
+                read:0,
+                company_id:company_id
             })
 
             service.successRetrievalResponse(res, 'task updated succesfully')
@@ -86,11 +90,11 @@ const updateTaskStatus = async (req, res) => {
 const taskByproject_id = async (req, res) => {
     try {
         const userdata = res.locals.user
-        const { user_id } = userdata
+        const { user_id ,company_id} = userdata
         const project_id = req.params.project_id
         const val = req.query.val
 
-        const result = await task.getTaskByProject(project, task, userinfo, project_id, val)
+        const result = await task.getTaskByProject(project, task, userinfo, project_id, val,company_id)
         service.successRetrievalResponse(res, 'tasks retrieved', result)
     } catch (error) {
         console.log(error)
@@ -102,10 +106,14 @@ const taskByproject_id = async (req, res) => {
 const taskBySearchQuery = async (req, res) => {
     try {
         const userdata = res.locals.user
-        const { user_id, role } = userdata
-        const task_name = req.query.query
-        const project_id = req.params.project_id
-        const result = await task.searchTaskInProject(project, task_name, userinfo, project_id)
+        const { user_id, role,company_id } = userdata
+        const taskName = req.query.taskName;
+        const taskStatus = req.query.taskStatus;
+        const taskOrder = req.query.taskOrder;  
+        const project_id = req.params.project_id;
+        console.log(project_id,taskName,taskStatus,taskOrder);
+      
+        const result = await task.searchTaskInProject(project, userinfo, project_id,company_id,taskName,taskStatus,taskOrder)
         service.successRetrievalResponse(res, 'task retrieved succesfully', result)
     } catch (error) {
         console.log(error)

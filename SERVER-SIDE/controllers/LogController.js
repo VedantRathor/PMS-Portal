@@ -18,11 +18,11 @@ const notification = db.notification
 const addLogInproject_idAndtask_id = async (req, res) => {
     try {
         const userdata = res.locals.user
-        const { user_id, role,name } = userdata
+        const { user_id, role,name,company_id } = userdata
 
-        const result = await log.createLog(req.params, req.body, user_id)
+        const result = await log.createLog(req.params, req.body, user_id,company_id)
         if (result != null) {
-            service.successRetrievalResponse(res, 'log posted')
+            service.successRetrievalResponse(res, 'log posted');
             const taskdetails = await project.findAll({
                 include: [{
                     model: task,
@@ -41,19 +41,21 @@ const addLogInproject_idAndtask_id = async (req, res) => {
                     model:assignment,
                     attributes : [],
                     where:{
-                        project_id : req.params.project_id 
+                        project_id : req.params.project_id ,
+                        company_id : company_id
                     }
                 }],
                 attributes:['user_id']
             }) ;
-            const allAdmins = await userinfo.findAll({where:{role:1},attributes:['user_id']}) ;
+            const allAdmins = await userinfo.findAll({where:{role:1,company_id:company_id},attributes:['user_id']}) ;
             const manager = await project.findAll({
                 include : [{
                     model : userinfo,
                     attributes:['user_id']
                 }],
                 where:{
-                    project_id : req.params.project_id
+                    project_id : req.params.project_id,
+                    company_id:company_id
                 }
             })
 
@@ -62,13 +64,15 @@ const addLogInproject_idAndtask_id = async (req, res) => {
                 await notification.create({
                     user_id : eachUser.user_id,
                     notification : `You added a new log in Project: ${taskdetails[0].project_name} under Task: ${taskdetails[0].tasks[0].task_name}`,
-                    read:0
+                    read:0,
+                    company_id:company_id
                 })
              } else{
                 await notification.create({
                     user_id : eachUser.user_id,
                     notification : `${name} added a new log in Project: ${taskdetails[0].project_name} under Task: ${taskdetails[0].tasks[0].task_name}`,
-                    read:0
+                    read:0,
+                    company_id:company_id
                 })
                
              }
@@ -78,14 +82,16 @@ const addLogInproject_idAndtask_id = async (req, res) => {
                 await notification.create({
                     user_id : eachAdmin.user_id,
                     notification : `${name} added a new log in Project: ${taskdetails[0].project_name} under Task: ${taskdetails[0].tasks[0].task_name}`,
-                    read : 0 
+                    read : 0 ,
+                    company_id:company_id
                 })
             })
 
             await notification.create({
                 user_id : manager[0].userinfo.user_id,
                 notification : `${name} added a new log in Project: ${taskdetails[0].project_name} under Task: ${taskdetails[0].tasks[0].task_name}`,
-                read : 0 
+                read : 0 ,
+                company_id:company_id
             })
 
         } else {
@@ -101,28 +107,29 @@ const addLogInproject_idAndtask_id = async (req, res) => {
 const updateLogStatus = async (req, res) => {
     try {
         const userdata = res.locals.user
-        const { user_id } = userdata
+        const { user_id , company_id} = userdata
         // update logstatus = logstatus and logmanager_id = user_id where log_id = log_id 
-        const result = await log.updateLogStatus(req.body, user_id)
+        const result = await log.updateLogStatus(req.body, user_id,company_id)
         if (result != null) {
-            service.successRetrievalResponse(res, 'log updated succesfully')
+            service.successRetrievalResponse(res, 'log updated succesfully');
         } else {
-            service.failRetrievalResponse(res, 'log cannot be updated')
+            service.failRetrievalResponse(res, 'log cannot be updated');
         }
 
     } catch (error) {
-        console.log('updateLogStatus-error', error)
-        service.serverSideError(res)
+        console.log('updateLogStatus-error', error);
+        service.serverSideError(res);
     }
 }
 
 // This Method: Retrieves all the Logs in a particular project
 const logByproject_id = async (req, res) => {
     try {
-
+        const userdata = res.locals.user;
+        const {company_id} = userdata;
         const project_id = req.params.project_id;
         const limit = 2
-        const result = await log.getLogsByProjectIdWithLimit(project, task, log, userinfo, project_id, limit)
+        const result = await log.getLogsByProjectIdWithLimit(project, task, log, userinfo, project_id, limit,company_id)
         service.successRetrievalResponse(res, 'logs for a project retrieved', result)
     } catch (error) {
         console.log(error)
@@ -146,12 +153,13 @@ const logByproject_id = async (req, res) => {
 
 const allLogs = async (req, res) => {
     try {
-
+        const userdata = res.locals.user;
+        const {company_id,user_id,role} = userdata;
         const project_id = req.params.project_id;
         const status = req.params.status
         const sortby = req.params.sortby
         const searchBy = req.query.searchBy
-        const result = await log.getAllLogs(project, task, log, userinfo, project_id, status, sortby, searchBy)
+        const result = await log.getAllLogs(project, task, log, userinfo, project_id, status, sortby, searchBy,company_id,user_id,role,assignment)
         //    console.log(result)
         service.successRetrievalResponse(res, 'logs for a project retrieved', result)
     } catch (error) {
@@ -165,9 +173,9 @@ const logByproject_idAndtask_id = async (req, res) => {
 
     try {
         const userdata = res.locals.user
-        const { user_id, role } = userdata
-        const project_id = req.params.project_id
-        const task_id = req.params.task_id
+        const { user_id, role ,company_id} = userdata
+        const project_id = req.params.project_id;
+        const task_id = req.params.task_id;
         let query = {
             include: [{
                 model: task,
@@ -183,7 +191,8 @@ const logByproject_idAndtask_id = async (req, res) => {
             }],
             where: {
                 // manager_id: user_id,
-                project_id: project_id
+                project_id: project_id,
+                company_id : company_id
             }
         };
 

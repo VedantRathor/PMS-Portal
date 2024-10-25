@@ -1,4 +1,7 @@
-const { Model, QueryTypes, where } = require('sequelize')
+const {getIO} = require('../src/socket');
+
+
+const { Model, QueryTypes, where } = require('sequelize');
 const express = require('express');
 const db = require('../models/index')
 const { Op } = require('sequelize')
@@ -69,8 +72,22 @@ const loginUserByEmailPass = async (req, res) => {
                 const token = await service.generateToken(email);
                 // update it 
                 await userinfo.updateUser(token, emailExists.email);
-                let result = emailExists
-                service.successRetrievalResponse(res, 'login succesful', result)
+                // let result = await userinfo.FindUser(email,CompanyId.company_id);
+                let result = await  userinfo.findOne({ where: { email: email, company_id : CompanyId.company_id},
+                    attributes:['name','email','created_at','updated_at','role','user_id','profile','company_id','token'] });
+                    let retResponse = {
+                        name : result.name,
+                        email: result.email,
+                        created_at:result.created_at,
+                        updated_at : result.updated_at,
+                        role : result.role,
+                        user_id : result.user_id,
+                        profile : result.profile,
+                        company_id : result.company_id,
+                        token : result.token,
+                        company_name: CompanyId.company_name
+                    }
+                service.successRetrievalResponse(res, 'login succesful', retResponse);
 
             } else {
                 service.failRetrievalResponse(res, 'passwords not matched')
@@ -87,6 +104,7 @@ const loginUserByEmailPass = async (req, res) => {
         console.log(error)
         service.serverSideError(res)
     }
+    
 }
 
 async function UpdateDetails(req, res) {
@@ -138,9 +156,43 @@ const getAllUsers = async(req,res) =>{
  try {
     const userdata = res.locals.user;
     const {company_id} = userdata;
-    const result = await userinfo.findAll({where:{role:{[Op.ne] : 1},company_id : company_id },
-    attributes:['name','email','created_at','updated_at','role','user_id','profile']
-   })
+   // Destructure the query parameters from req.query
+const { userName, userOrder, userRole } = req.query;
+
+// Build the where conditions dynamically
+        const userWhereClause = {
+            role: { [Op.ne]: 1 }, // Exclude role = 1 (as per your example)
+            company_id: company_id
+        };
+
+        // If userName is provided, add a name filter
+        if (userName) {
+            userWhereClause.name = {
+                [Op.like]: `%${userName}%`
+            };
+        }
+
+        // If userRole is provided, add a role filter
+        if (userRole) {
+            userWhereClause.role = +userRole;
+        }
+
+        // Build the order array based on userOrder
+        let orderClause = [];
+        if (userOrder == 1) {
+            // Order by updated_at descending
+            orderClause = [['updated_at', 'DESC']];
+        } else {
+            // Order by updated_at ascending
+            orderClause = [['updated_at', 'ASC']];
+        }
+
+        // Execute the query
+        const result = await userinfo.findAll({
+            where: userWhereClause,
+            attributes: ['name', 'email', 'created_at', 'updated_at', 'role', 'user_id', 'profile', 'company_id'], // Select specific attributes
+            order: orderClause
+        });
    
     service.successRetrievalResponse(res,"user data succesfully retrieved",result)
  } catch (error) {
@@ -199,39 +251,48 @@ const updateUserInfo = async(req,res) => {
     }
 }
 
-const update_user_profile = async(req,res) => {
+const uploadVideo = async(req,res) => {
+    try {
+        let videoPathName = req.file ? req.file.filename : null;
+        res.json({
+            "video path": videoPathName
+        });
+    } catch (error) {
+        console.log('error:' , error);
+    }
+}
 
+const update_user_profile = async (req, res) => {
     try {
         const userdata = res.locals.user;
-        const {company_id} = userdata;
-        const {role,email} = req.body ;
-        let profileImage = req.file.originalname;
-    
-        if( role == 0 ){
-            service.failRetrievalResponse(res,'Please Select Valid Role') ;
-        }else{
-            const result = await userinfo.findAll({where:{email:email,company_id:company_id}}) ;
-                if( result.length == 0 ){
-                   service.failRetrievalResponse(res,'User Does not Exists') ;
-                }else{
-                    
-                        // do normal update, only in role and name
-                        await userinfo.update({
-                           profile : profileImage
-                        },{
-                            where : {
-                                user_id : result[0].user_id ,
-                                company_id:company_id
-                            }
-                        });
-                        service.successRetrievalResponse(res,'Updation Succesfull') ; 
-                    
-                }
-           
+        const { company_id } = userdata;
+        const { role, email } = req.body;
+
+        // Get the filename from the uploaded file
+        let profileImage = req.file ? req.file.filename : null; // Use req.file.filename instead of req.file.originalname
+
+        if (role == 0) {
+            service.failRetrievalResponse(res, 'Please Select Valid Role');
+        } else {
+            const result = await userinfo.findAll({ where: { email: email, company_id: company_id } });
+            if (result.length == 0) {
+                service.failRetrievalResponse(res, 'User Does not Exists');
+            } else {
+                // Update the profile image and other fields if needed
+                await userinfo.update({
+                    profile: profileImage // Save the filename in the database
+                }, {
+                    where: {
+                        user_id: result[0].user_id,
+                        company_id: company_id
+                    }
+                });
+                service.successRetrievalResponse(res, 'Updation Successful');
+            }
         }
     } catch (error) {
-        console.log('error in updateUserProfile',error);
-        service.serverSideError(res) ;
+        console.log('error in updateUserProfile', error);
+        service.serverSideError(res);
     }
 }
 
@@ -242,5 +303,6 @@ module.exports = {
     getNotifications,
     getAllUsers,
     updateUserInfo,
-    update_user_profile
+    update_user_profile,
+    uploadVideo
 }

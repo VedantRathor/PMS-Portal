@@ -6,11 +6,12 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class assignment extends Model {
 
-    static createAssignment({ project_id, user_id }, assigner) {
+    static createAssignment({ project_id, user_id }, assigner,company_id) {
       return assignment.create({
           project_id: project_id,
           user_id: user_id,
-          manager_id: assigner
+          manager_id: assigner,
+          company_id:company_id
       })
     }
 

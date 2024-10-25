@@ -2,21 +2,35 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('notifications', {
-      notification_id: {
+    await queryInterface.createTable('chats', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      company_id: {
+        allowNull : false ,
         type: Sequelize.INTEGER
       },
-      notification: {
+      project_id: {
+        allowNull : false,
+        type: Sequelize.INTEGER
+      },
+      user_id: {
+        allowNull : false ,
+        type: Sequelize.INTEGER
+      },
+      message: {
+        allowNull : false ,
         type: Sequelize.TEXT
       },
-      read: {
+      type: {
         type: Sequelize.INTEGER
+      },
+      deleted_at: {
+        allowNull : true ,
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,
@@ -25,14 +39,10 @@ module.exports = {
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      company_id : {
-        allowNull : false,
-        type: Sequelize.INTEGER
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('notifications');
+    await queryInterface.dropTable('chats');
   }
 };

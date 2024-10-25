@@ -13,7 +13,7 @@ const service = require('../services/service')
 const jwt = require('jsonwebtoken')
 const authIslogin = require('../middlewares/authIslogin');
 const { SERIALIZABLE } = require('sequelize/lib/table-hints');
-const { Socket } = require('socket.io');
+// const { Socket } = require('socket.io');
 
 
 

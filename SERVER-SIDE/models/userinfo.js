@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static getManagers(company_id){
-      return userinfo.findAll({ where: { role: 2 , company_id : company_id}, attributes: ['user_id', 'name'] })
+      return userinfo.findAll({ where: { role: 2 , company_id : company_id}, attributes: ['user_id', 'name','profile'] })
     }
     static associate(models) {
       // define association here

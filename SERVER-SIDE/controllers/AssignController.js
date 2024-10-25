@@ -17,10 +17,11 @@ const { SERIALIZABLE } = require('sequelize/lib/table-hints');
 const assignMembers = async (req, res) => {
     try {
         const userdata = res.locals.user
+        const {company_id} = userdata;
         const assigner = userdata.user_id
 
         if (userdata != null && (userdata.role == 1 || userdata.role == 2)) {
-            const result = await assignment.createAssignment(req.body, assigner)
+            const result = await assignment.createAssignment(req.body, assigner,company_id);
             service.successRetrievalResponse(res, 'assigned succesfully', result)
         } else {
             service.failRetrievalResponse(res, 'cannot be assigned')

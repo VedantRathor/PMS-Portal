@@ -12,7 +12,7 @@ const service = require('../services/service')
 const jwt = require('jsonwebtoken')
 const authIslogin = require('../middlewares/authIslogin');
 const { SERIALIZABLE } = require('sequelize/lib/table-hints');
-const { Socket } = require('socket.io');
+// const { Socket } = require('socket.io');
 
 // this method: Adds a new project by Super Admin
 
@@ -30,14 +30,14 @@ const addNewProject = async (req, res) => {
             // here i want to emit the event ! 
             
             const manager_id = req.body.manager_id ;
-            const socket = req.users.get(manager_id)
+            // const socket = req.users.get(manager_id)
             console.log(manager_id)
-            console.log('socket socket',socket)
+            // console.log('socket socket',socket)
             console.log(req.users)
-            if( socket ){
+            // if( socket ){
                 
-                socket.emit('alert',`Project: ${req.body.project_name} assigned to you!!`)
-            }
+            //     socket.emit('alert',`Project: ${req.body.project_name} assigned to you!!`)
+            // }
             // insert this in notification table ! 
             await notification.create({
                 user_id : manager_id ,
@@ -129,8 +129,9 @@ const memberByproject_id = async (req, res) => {
 // this method: Updates the Project-Status
 const updateProjectStatus = async (req, res) => {
     try {
-
-        const result = await project.updateProjectStatus(req.params, req.body)
+         const userdata = res.locals.user;
+         const {company_id}=userdata;
+        const result = await project.updateProjectStatus(req.params, req.body,company_id)
         if (result != null) {
             service.successRetrievalResponse(res, 'project updated')
         } else {
@@ -156,13 +157,14 @@ const getProjectBymanager_id = async (req, res) => {
             }
             if (role == 2) {
                 // where condition - manager_id = user_id
-                query.where = { manager_id: user_id , company_id};
+                query.where = { manager_id: user_id , company_id:company_id};
             }
-            const result = await project.findAll(query)
+            const result = await project.findAll(query);
+            console.log('result',result);
             service.successRetrievalResponse(res, 'projects retrieved', result)
         } else if (role == 3) {
             // user hasMany assignments, ass belongs to a project
-            const result = await project.employeeFindAll(userinfo, assignment, user_id)
+            const result = await project.employeeFindAll(userinfo, assignment, user_id,company_id)
             service.successRetrievalResponse(res, 'project data retrieved', result)
         }
 
@@ -278,11 +280,31 @@ const getManagers = async (req, res) => {
 // this method: Retrieves all the Employees who are not assigned in a particular project
 const getMemberByproject_idNotInvolved = async (req, res) => {
     try {
+        const userdata = res.locals.user;
+        const {company_id} = userdata;
         const project_id = req.params.project_id
-        const result = await db.sequelize.query('select t.* from (select u.user_id , u.name , count(a.user_id) as ct from userinfos u left join assignments a on u.user_id = a.user_id WHERE u.role = 3 group by (u.user_id) order by a.user_id) t where t.user_id not in (select user_id from assignments where project_id = ?)', {
-            replacements: [project_id],
+        const result = await db.sequelize.query(`
+            SELECT t.* 
+            FROM (
+                SELECT u.user_id, u.name, COUNT(a.user_id) AS ct 
+                FROM userinfos u 
+                LEFT JOIN assignments a 
+                ON u.user_id = a.user_id 
+                WHERE u.role = 3 
+                AND u.company_id = ? 
+                GROUP BY u.user_id 
+                ORDER BY a.user_id
+            ) t 
+            WHERE t.user_id NOT IN (
+                SELECT user_id 
+                FROM assignments 
+                WHERE project_id = ? 
+                AND company_id = ?
+            )
+        `, {
+            replacements: [company_id, project_id, company_id],
             type: QueryTypes.SELECT,
-        })
+        });
         service.successRetrievalResponse(res, 'retrieved members not involved in a project', result)
     } catch (error) {
         console.log(error)

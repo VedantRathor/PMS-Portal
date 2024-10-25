@@ -1,5 +1,7 @@
 'use strict';
 const { Op } = require('sequelize')
+const socket = require('../src/socket');
+
 const {
   Model
 } = require('sequelize');
@@ -21,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
     // This Method: used to retrieve project-detail
     static getProjectDetails(userinfo, project_id, company_id) {
+      
       return project.findAll({
         include: [{
           model: userinfo,
@@ -60,13 +63,14 @@ module.exports = (sequelize, DataTypes) => {
         status: status
       }, {
         where: {
-          project_id: project_id
+          project_id: project_id,
+          company_id:company_id
         }
       })
     }
 
     // This Method: this is a additional method for employee to find all the projects
-    static employeeFindAll(userinfo, assignment, user_id) {
+    static employeeFindAll(userinfo, assignment, user_id,company_id) {
       return project.findAll({
         required: true,
         include: [
@@ -77,12 +81,16 @@ module.exports = (sequelize, DataTypes) => {
           {
             model: assignment,
             where: {
-              user_id: user_id
+              user_id: user_id,
+             
             },
             attributes: ['created_at', 'updated_at']
           }
 
         ],
+        where : {
+          company_id : company_id
+        }
       })
     }
 

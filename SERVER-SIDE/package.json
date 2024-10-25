@@ -1,4 +1,8 @@
 {
+  "scripts": {
+  "start": "node src/app.js", 
+    "dev": "nodemon src/app.js" 
+  },
   "dependencies": {
     "@octoai/client": "^0.5.2",
     "cors": "^2.8.5",
