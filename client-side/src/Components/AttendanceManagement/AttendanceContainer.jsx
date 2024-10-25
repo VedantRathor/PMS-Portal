@@ -12,7 +12,13 @@ dayjs.extend(duration);
 function AttendanceContainer() {
     let auth = localStorage.getItem('user');
     auth = JSON.parse(auth);
+    const isDemoMode = localStorage.getItem('ISDEMO') === 'true';
     const navigate = useNavigate();
+
+    setTimeout(() => {
+      alert(`This is a premium service, contact at vedantrathore627@gmail.com to continue.`)
+      navigate('/');
+    }, 2000); // 2000 milliseconds = 2 seconds
 
   const [date, setDate] = useState('');
   const [checkIn, setCheckIn] = useState('');
@@ -51,7 +57,7 @@ function AttendanceContainer() {
     e.preventDefault();
     // Handle form submission, e.g., send data to API or process it.
     const data = { which_date:date, check_in:checkIn, check_out:checkOut, total_hours:totalHours, attendance_type:status , user_id : auth.result.user_id } ;
-    let response = await axios.post(`${localhost}/api/attendance-portal/mark-attendance`, data , {
+    let response = await axios.post(`http://localhost:7007/api/attendance-portal/mark-attendance`, data , {
         headers : {
             Authorization : `Bearer ${auth.result.token}`
         }, 
@@ -139,7 +145,7 @@ function AttendanceContainer() {
 
           <div className="form-group row">
             <div className="col-sm-10">
-              <button  style={{float:'right'}} type="submit" className="btn btn-success">Submit</button>
+              <button disabled = {isDemoMode} style={{float:'right'}} type="submit" className="btn btn-outline-info">Submit</button>
             </div>
           </div>
         </form>

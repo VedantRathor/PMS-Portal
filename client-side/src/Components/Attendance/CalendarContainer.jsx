@@ -7,6 +7,7 @@ import axios from 'axios';
 const localhost = 'http://localhost:7007';
 
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 // Format the date
 const formatDate = (date) => {
@@ -29,7 +30,7 @@ const getStatusColor = (status) => {
 
 const CalendarContainer = ({parentFunctionToSetDate,refresh}) => {
    
- 
+     const navigate = useNavigate();
 
   const [attendanceData, setAttendanceData] = useState([]);
 
@@ -39,7 +40,7 @@ const CalendarContainer = ({parentFunctionToSetDate,refresh}) => {
         let auth = await localStorage.getItem('user');
         auth = await JSON.parse(auth);
       
-        const response = await axios.get(`${localhost}/api/attendance-portal/get-attendance`, 
+        const response = await axios.get(`http://localhost:7007/api/attendance-portal/get-attendance`, 
             {
               headers: {
                 Authorization: `Bearer ${auth.result.token}`,
@@ -59,6 +60,8 @@ const CalendarContainer = ({parentFunctionToSetDate,refresh}) => {
   }, [refresh]);
 
   const handleDateClick = (arg) => {
+    navigate('/');
+    return;
     console.log('first,',arg);
     if (arg.dayEl.classList.contains('weekend-cell')) {
       return; // Do nothing if it's a weekend

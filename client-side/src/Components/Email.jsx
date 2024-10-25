@@ -8,6 +8,10 @@ import { CiMail } from "react-icons/ci";
 
 
 function Email({ email, ToggleEmailVisibility }) {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Smooth scrolling effect
+      });
     const handleCrossClicked = () => {
         ToggleEmailVisibility('');
     };
@@ -51,7 +55,7 @@ function Email({ email, ToggleEmailVisibility }) {
                     </div>
 
                     <div class="col-12 mt-5">
-                        <a href={gmailLink} style={{ width: '28%', float: 'right' }} class="btn btn-primary d-flex justify-content-center align-items-center gap-1">Send an Email <CiMail size={30} color='yellow' /></a>
+                        <a href={gmailLink} style={{ width: '28%', float: 'right' }} class="btn btn-outline-info d-flex justify-content-center align-items-center gap-1">Send an Email <CiMail size={30} color='yellow' /></a>
                     </div>
                 </form>
             </div>

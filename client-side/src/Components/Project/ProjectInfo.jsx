@@ -4,6 +4,7 @@ import { CiCircleInfo } from "react-icons/ci";
 import { FaBookOpen } from "react-icons/fa";
 import { FaFilePdf } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 const localhost = 'http://localhost:7007'
 function ProjectInfo({singleProjectData,parentFunctionDisplayData}) {
     let imageUrl = `${localhost}/uploaded-image/`;
@@ -33,12 +34,12 @@ function ProjectInfo({singleProjectData,parentFunctionDisplayData}) {
             project_id : eachProjectShowData.project_id,
             project_name : eachProjectShowData.project_name,
             project_details : eachProjectShowData.project_details,
-            created_at : eachProjectShowData.created_at.split('T')[0],
-            updated_at : eachProjectShowData.updated_at.split('T')[0],
+            created_at : moment(eachProjectShowData.created_at).format('DD MMM YYYY'),
+            updated_at : moment(eachProjectShowData.updated_at).format('DD MMM YYYY'),
             created_by : 'Admin'
           }
          
-          axios.post(`${localhost}/generate-pdf`, { data: pdfdata }, { responseType: 'blob' })
+          axios.post(`http://localhost:7007/generate-pdf`, { data: pdfdata }, { responseType: 'blob' })
               .then((response) => {
                   // Create a Blob from the PDF data
                   const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
@@ -78,7 +79,7 @@ function ProjectInfo({singleProjectData,parentFunctionDisplayData}) {
                     <tr>
                        
                         <th scope="col">Name</th>
-                        <th onClick={()=>{handleProjectClicked(singleProjectData)}} scope="col" className='text-info d-flex align-center ' style={{textDecoration:'',cursor:'pointer'}}>Details <CiCircleInfo className='text-alice' size='25' /></th>
+                        <th onClick={()=>{handleProjectClicked(singleProjectData)}} scope="col" className='text-info  ' style={{textDecoration:'',cursor:'pointer'}}>Details <CiCircleInfo className='text-alice' size='25' /></th>
                         <th scope="col">Manager</th>
                         <th scope="col">Created By</th>
                         <th scope="col">Created At</th>
@@ -103,8 +104,8 @@ function ProjectInfo({singleProjectData,parentFunctionDisplayData}) {
                                    
                                 </td>
                                 <td>Admin</td>
-                                <td>{singleProjectData.created_at.split('T')[0]}</td>
-                                <td>{singleProjectData.updated_at.split('T')[0]}</td>
+                                <td>{moment(singleProjectData.created_at).format('DD MMM YYYY')}</td>
+                                <td>{moment(singleProjectData.updated_at).format('DD MMM YYYY')}</td>
                                 <td>Admin</td>
 
                             </tr>   

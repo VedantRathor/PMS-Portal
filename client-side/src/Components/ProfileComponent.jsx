@@ -2,8 +2,9 @@ import React from 'react'
 import { BsPersonCircle } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { CiLogout } from "react-icons/ci";
-import {io} from 'socket.io-client';
-const socket = io('http://localhost:7007');
+import moment from 'moment';
+// import {io} from 'socket.io-client';
+// const socket = io('https://pms-production-c765.up.railway.app');
 const localhost = "http://localhost:7007";
 
 function ProfileComponent() {
@@ -11,7 +12,7 @@ function ProfileComponent() {
     auth = JSON.parse(auth)
     let imageUrl = `${localhost}/uploaded-image/`;
     const handleLogout = () => {
-        socket.emit('logout')
+        // socket.emit('logout')
         localStorage.clear()
         navigate('/Login')
       }
@@ -31,8 +32,8 @@ function ProfileComponent() {
                       <li><u><b className='text-white'>Name:</b></u>  {auth.result.name}</li>
                       <li><u><b className='text-white'>Email:</b></u>  {auth.result.email}</li>
                       <li><u><b className='text-white'>Created By:</b></u>  Admin</li>
-                      <li><u><b className='text-white'>Created At:</b></u>  {auth.result.created_at.split('T')[0]}</li>
-                      <li><u><b className='text-white'>Updated At:</b></u>  {auth.result.updated_at.split('T')[0]}</li>
+                      <li><u><b className='text-white'>Created At:</b></u>  {moment(auth.result.created_at).format('DD MMM YYYY')}</li>
+                      <li><u><b className='text-white'>Updated At:</b></u>  {moment(auth.result.updated_at).format('DD MMM YYYY')}</li>
 
                   </ul>
 

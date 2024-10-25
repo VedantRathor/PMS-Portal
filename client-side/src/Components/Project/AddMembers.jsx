@@ -9,8 +9,14 @@ const localhost = 'http://localhost:7007'
 function AddMembers({ RefreshMe, project_id, OpenMember }) {
     let imageUrl = `${localhost}/uploaded-image/`;
     let auth = JSON.parse(localStorage.getItem('user')); // Parse directly when retrieving from localStorage
-
+    const isDemoMode = localStorage.getItem('ISDEMO') === 'true';
     const navigate = useNavigate();
+    useEffect( ()=>{
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Smooth scrolling effect
+          });
+    },[]);
     const [selectedUsers, setSelectedUsers] = useState([]); // Use an array to store selected users
     const [remainingMemberData, setRemMemberData] = useState([]);
     const handleCheckboxChange = (userId) => {
@@ -46,12 +52,12 @@ function AddMembers({ RefreshMe, project_id, OpenMember }) {
 
                 if (result === null) {
                     throw new Error('Some Error Occurred, Please try again later. Thank You');
-                }else{
-                    RefreshMe()
-                    OpenMember()   
                 }
             }
 
+            
+            RefreshMe();
+            OpenMember();   
             alert(`Members Added Successfully.`);
        
         } catch (error) {
@@ -67,8 +73,12 @@ function AddMembers({ RefreshMe, project_id, OpenMember }) {
     useEffect(() => {
         const getMembersByPidNotInvolved = async () => {
             try {
-                const response = await axios.get(`http://localhost:7007/project/members/not-invlolved/${project_id}`);
-                setRemMemberData(response.data.result);
+                const response = await axios.get(`http://localhost:7007/project/members/not-invlolved/${project_id}`,{
+                    headers:{
+                        Authorization : `Bearer ${auth.result.token}`
+                    }
+                });
+                setRemMemberData(response.data?.result);
             } catch (error) {
                 console.error('Error fetching members:', error);
             }
@@ -81,7 +91,7 @@ function AddMembers({ RefreshMe, project_id, OpenMember }) {
             <div className='member-actual-form'>
             <h4 className='text-center text-white   '>Assign Members <BsPeopleFill size={20} color='yellow' /></h4>
             {
-                remainingMemberData.length ? (
+                remainingMemberData && remainingMemberData?.length ? (
                     <form style={{}} onSubmit={handleSubmit}>
                         <div className="">
                             <table className="table table-dark table-hover" style={{ width: '50rem' }}>
@@ -122,7 +132,7 @@ function AddMembers({ RefreshMe, project_id, OpenMember }) {
                             </table>
                         </div>
 
-                        <button style={{float:'right'}} className='btn btn-dark' type="submit">Assign</button>
+                        <button disabled = {isDemoMode} style={{float:'right'}} className='btn btn-outline-info' type="submit">Assign</button>
                     </form>
                 ) : (
                     <p>No data available or access denied</p>

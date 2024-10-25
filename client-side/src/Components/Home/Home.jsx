@@ -2,19 +2,23 @@ import React, { useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useNavigate } from 'react-router-dom'
 
+
 function Home() {
   const navigate = useNavigate()
   let auth = localStorage.getItem('user')
   auth = JSON.parse(auth)
   let name, role;
+
+
   useEffect(()=>{
     if (auth != null && auth != undefined) {
         name = auth.result.name
         role = auth.result.role
+        document.title = `PMS | ${auth.result.company_name}`;
       }else{
          
-          localStorage.removeItem('user')
-          navigate('/login')
+          localStorage.removeItem('user');
+          navigate('/login');
       }
       
 },[])
@@ -25,7 +29,8 @@ function Home() {
   }
   return (
     <div style={{width:'100%',height:'100%'}} className='text-center text-white '>
-   
+
+       {/* <img src='https://wallpaperaccess.com/full/2927403.jpg' style={{position:'absolute',width:'27%',left:'10px'}} /> */}
        <div style={{backgroundColor:' #2d3034'}} class="cover-container d-flex h-100 p-3 mx-auto flex-column home-container">
       
       <header class="masthead mb-auto">
@@ -41,7 +46,7 @@ function Home() {
         <h1 class="cover-heading">Your All In One Solution</h1>
         <p class="lead">Now Manage the project development cycle like never before.</p>
         <p class="lead">
-          <a style={{cursor:'pointer'}} onClick={()=>{navigateToProject()}} class="btn btn-lg btn-secondary">Learn more</a>
+          <a style={{cursor:'pointer'}} onClick={()=>{navigateToProject()}} class="btn btn-lg btn-outline-info">Learn more</a>
         </p>
       </main>
 

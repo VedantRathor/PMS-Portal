@@ -103,7 +103,7 @@ function AI_ASK_GPT({toggleAIGPTIDalogBox}) {
                       <span class="input-group-addon text-white ">Ask Me</span>
                       <textarea style={{borderRadius:'15px'}} onChange={handleTyping}   id="question" type="text" class="form-control" name="question" placeholder="Your Question"/>
                   </div>
-            <button style={{float:'right'}} type='submit' className='btn btn-success mt-2'>generate</button>
+            <button style={{float:'right'}} type='submit' className='btn btn-outline-info mt-2'>generate</button>
       </form>
       <div style={{clear:'both'}} className='para-show p-3'>
           { isLoading == true && btnClicked ? <p className='text-center mt-5 text-success' > Loading....</p> : generatedText != null && generatedText != undefined && generatedText != '' ? <FormattedContent text={generatedText} /> : <></>  }

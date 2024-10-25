@@ -41,6 +41,8 @@ function About() {
 
                         <main role="main" class="inner cover">
                             <h5 class="cover-heading" style={{marginTop:'10%'}}>< GrLicense style={{marginRight:'1%'}} size={30}/>   Developed By <b><u>Vedant Rathore</u></b></h5>
+                            <br></br>
+                            <p>Special thanks to my friend Shivam for guiding me through the design process, and to my senior, Mr. Chirag Bathani, for introducing me to industry best practices that made the project scalable. Their guidance played a crucial role in the success and longevity of this project.</p>
                             <p class="lead">Now Manage the project development cycle like never before.</p>
                             <p class="lead">
                                 <a style={{ cursor: 'pointer' }} onClick={() => { navigateToProject() }} class="btn btn-lg btn-secondary">Learn more</a>

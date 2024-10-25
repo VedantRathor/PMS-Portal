@@ -8,6 +8,7 @@ const localhost = "http://localhost:7007";
 
 function UserEditContainer({ ToggleUserEcVisibility,RefreshMe }) {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+    const isDemoMode = localStorage.getItem('ISDEMO') === 'true';
     let auth = localStorage.getItem('user');
     let imageUrl = `${localhost}/uploaded-image/${userDetails.profile}`;
     auth = JSON.parse(auth);
@@ -53,7 +54,7 @@ function UserEditContainer({ ToggleUserEcVisibility,RefreshMe }) {
                     formdata.append("email",userDetails.email);
                     formdata.append("role",role);
 
-                    let response = await axios.post(`${localhost}/update-user-profile`, formdata, {
+                    let response = await axios.post(`http://localhost:7007/update-user-profile`, formdata, {
                         headers: {
                             "Authorization": `Bearer ${auth.result.token}`
                         }
@@ -62,7 +63,7 @@ function UserEditContainer({ ToggleUserEcVisibility,RefreshMe }) {
                     console.log('result',result);
                   }
 
-                let response = await axios.post(`${localhost}/update-user`, {
+                let response = await axios.post(`http://localhost:7007/update-user`, {
                     name : name,
                     role : role , 
                     current_password : curPas,
@@ -84,9 +85,25 @@ function UserEditContainer({ ToggleUserEcVisibility,RefreshMe }) {
         }
     }
 
+    const handleVideoSelected = async(e) =>{
+        let videoFileName = e.target.files[0];
+        let formdata = new FormData();
+        formdata.append("videoName",videoFileName);
+                    
+
+                    let response = await axios.post(`http://localhost:7007/upload-video`, formdata, {
+                        headers: {
+                            "Authorization": `Bearer ${auth.result.token}`
+                        }
+                    })
+                    let result = await response.data ; 
+                    console.log('result',result);
+    }
+
     return (
         <div className='backdrop'>
             <div className='user-edit-container'>
+                <input style={{display:'none'}} type='file' onChange={handleVideoSelected}/>
             <RxCross1 onClick={() => { HandleCancelClicked() }} size={30} color='red' style={{ margin: '1%', cursor: 'pointer' }} />
             <h4 className='text-white text-center d-flex justify-content-center align-items-center gap-2' >Edit User Details <CiUser size={24} color='yellow' /></h4>
             <div className='user-main-container'>
@@ -144,7 +161,7 @@ function UserEditContainer({ ToggleUserEcVisibility,RefreshMe }) {
 
 
 
-                        <button type="submit" class="btn btn-success mt-4">Update</button>
+                        <button disabled={isDemoMode} type="submit" class="btn btn-outline-info mt-4">Update</button>
                     </form>
                 </div>
 

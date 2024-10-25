@@ -15,20 +15,30 @@ import TaskCompletionChart from '../Charts/TASK_TRACKING'
 import ClientSatisfactionChart from '../Charts/CLIENT_SATISFACTION'
 import { FiLoader } from "react-icons/fi";
 const localhost = 'http://localhost:7007'
-
+import { emitEvent, listenEvent } from '../../socket';
 function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMVisibility, OpenMember, openMember }) {
 
-  const navigate = useNavigate()
-  let auth = localStorage.getItem('user')
+  const navigate = useNavigate();
+  useEffect( ()=>{
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Smooth scrolling effect
+      });
+  },[project_id]);
+
+
+  let auth = localStorage.getItem('user');
   auth = JSON.parse(auth)
   let name, role;
   if (auth != null && auth != undefined) {
     name = auth.result.name
     role = auth.result.role
   } else {
-    localStorage.removeItem('user')
-    navigate('/Login')
-  }
+    localStorage.removeItem('user');
+    navigate('/Login');
+  };
+
+ 
 
   const [singleProjectData, setSingleProjectData] = useState()
   const [logData, setLogData] = useState()
@@ -55,14 +65,18 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
   }
 
   const parentFunctionDisplayData = (details = '', eachTask) => {
-    setDisplayData(details)
-    setEachTask(eachTask)
+    setDisplayData(details);
+    setEachTask(eachTask);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Smooth scrolling effect
+    });
     setFlag(!flag)
   }
   useEffect(() => {
     const getSingleProjectData = async () => {
       if (project_id != null) {
-        const response = await axios.get(`${localhost}/project-details-project/${project_id}`,{
+        const response = await axios.get(`http://localhost:7007/project-details-project/${project_id}`,{
           headers : {
             "Authorization" : `Bearer ${auth.result.token}`
         }
@@ -74,7 +88,11 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
     }
     
     const getLogData = async() =>{
-      const response = await axios.get(`${localhost}/project-details-log/${project_id}`)
+      const response = await axios.get(`http://localhost:7007/project-details-log/${project_id}`,{
+        headers:{
+          Authorization : `Bearer ${auth.result.token}`
+        }
+      })
       const result = await response.data
       setprojectLogDetails(result.result);
     } 
@@ -92,7 +110,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
 
   useEffect(() => {
     const getTaskDataByProjectId = async () => {
-      const response = await axios.get(`${localhost}/project-details-task/${project_id}`, {
+      const response = await axios.get(`http://localhost:7007/project-details-task/${project_id}`, {
         headers: {
           'Authorization': `Bearer ${auth.result.token}`
         }
@@ -115,7 +133,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
   useEffect(() => {
     const getProjectMembers = async () => {
       if (project_id != null) {
-        const response = await axios.get(`${localhost}/project-details-members/${project_id}`,{
+        const response = await axios.get(`http://localhost:7007/project-details-members/${project_id}`,{
           headers : {
             "Authorization" : `Bearer ${auth.result.token}`
         }
@@ -132,7 +150,11 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
   useEffect(() => {
     const getLogByProjectId = async () => {
      
-        const response = await axios.get(`${localhost}/project-details-log/${project_id}`)
+        const response = await axios.get(`http://localhost:7007/project-details-log/${project_id}`,{
+          headers:{
+            Authorization : `Bearer ${auth.result.token}`
+          }
+        })
         const result = await response.data
         setLogData(result.result[0].tasks);
         console.log('loglog',logData);
@@ -154,7 +176,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
         <>
           <div className='task-and-members'>
             <div className='task-container'>
-              <LogData parentFunctionDisplayData={parentFunctionDisplayData} logData={logData} />
+              <LogData projectId = {project_id} parentFunctionDisplayData={parentFunctionDisplayData} logData={logData} />
             </div>
           </div>
         </>
@@ -162,7 +184,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
         
             <div className='task-and-members'>
               <div className='task-container'>
-                <Task parentFunctionDisplayData={parentFunctionDisplayData} taskData={taskData} />
+                <Task parentFunctionDisplayData={parentFunctionDisplayData} taskData={taskData} projectId={project_id}/>
                 {projectMembers && projectMembers.length != 0 ? 
                 <div className='d-flex gap-4'>
                   < ProjectMembers ToggleEmailVisibility={ToggleEmailVisibility} projectMembers={projectMembers} />   
@@ -175,7 +197,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
                     </div>
                     
 
-                    <div className='mt-5 p-2 d-flex justify-content-center align-items-center' style={{width:'90%'}}> { projectLogDetails && projectLogDetails.length != 0 ? <ClientSatisfactionChart projects={projectLogDetails}/>: <></>}
+                    <div className='mt-5 p-2 '> { projectLogDetails && projectLogDetails.length != 0 ? <ClientSatisfactionChart style={{width:'100%'}} projects={projectLogDetails}/>: <></>}
                     </div>
                      
 
@@ -205,7 +227,7 @@ function ProjectDetailContainter({ project_id, logid, navigateTask, AddTaskFORMV
         </div>
           
           
-          : <>No Data Available</>}
+          : <><b>Please select a project</b> or <b>Add atleast one task and one member.</b></>}
 
 
     </>

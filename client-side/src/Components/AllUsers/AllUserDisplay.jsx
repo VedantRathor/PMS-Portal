@@ -2,7 +2,7 @@ import React from 'react'
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 const localhost = 'http://localhost:7007'
-
+import moment from 'moment';
 function AllUserDisplay({ allUserData ,ToggleUserEcVisibility,ToggleEmailVisibility,email}) {
     let imageUrl = `${localhost}/uploaded-image/`;
     const HandleEditButtonClicked = (eachUser) => {
@@ -41,8 +41,8 @@ function AllUserDisplay({ allUserData ,ToggleUserEcVisibility,ToggleEmailVisibil
 
                             </td>
                             {eachUser.role == 2 ? <td className='text-warning makelink'  onClick={()=>{handleEmailClicked(eachUser.email)}}>{eachUser.email}</td> :<td className=' makelink'  onClick={()=>{handleEmailClicked(eachUser.email)}}>{eachUser.email}</td>}
-                            <td>{eachUser.created_at.split('T')[0]}</td>
-                            <td>{eachUser.updated_at.split('T')[0]}</td>
+                            <td>{moment(eachUser.created_at).format('DD MMM YYYY')}</td>
+                            <td>{moment(eachUser.updated_at).format('DD MMM YYYY')}</td>
                             {eachUser.role == 2 ? <td className='text-warning'>Manager</td> : <td>Employee</td>}
                             <td className='text-center' ><FiEdit onClick={() => { HandleEditButtonClicked(eachUser) }} style={{ cursor: 'pointer' }} size={22} color='lightGreen' />  <MdDelete size={25} color='
                             red' style={{ marginLeft: '5%', cursor: 'pointer' }} /></td>

@@ -8,7 +8,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FaCheckCircle } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import { FiEdit2 } from "react-icons/fi";
-
+import moment from 'moment';
 import axios from 'axios';
 const localhost = 'http://localhost:7007'
 
@@ -58,7 +58,7 @@ function AllLogs({ eachproject, eachTask, eachLog, parentFunctionDisplayData, ge
   const handleLogStatus = async (logstatus, log_id) => {
     setEditClicked(false) ;
     setlogID(null) ;
-    let response = await axios.post(`${localhost}/update-log-status`, {
+    let response = await axios.post(`http://localhost:7007/update-log-status`, {
       log_id: log_id,
       logstatus: logstatus
     }, {
@@ -89,8 +89,8 @@ function AllLogs({ eachproject, eachTask, eachLog, parentFunctionDisplayData, ge
         <td onClick={() => { handleLogDataClick(eachLog.logdata) }} className='makelink'>{eachLog.logdata}</td>
         <td style={{ color: "yellow" }}>{eachLog.start_time.split('T')[0]}</td>
         <td style={{ color: "yellow" }}>{eachLog.end_time.split('T')[0]}</td>
-        <td>{eachLog.created_at.split('T')[0]}</td>
-        <td>{eachLog.updated_at.split('T')[0]}</td>
+        <td>{moment(eachLog.created_at).format('DD MMM YYYY')}</td>
+        <td>{moment(eachLog.updated_at).format('DD MMM YYYY')}</td>
         <td><span className='makelink' onClick={() => { handleProjectClick(eachproject) }}>{eachproject.project_name}</span> <span onClick={() => { handleGeneratePDF(eachproject) }} style={{ cursor: 'pointer' }}><FaFilePdf color='rgb(255, 152, 152)' size={23} /></span></td>
         <td onClick={() => { handleTaskClick(eachTask) }} className='makelink'>{eachTask.task_name}</td>
         <td>{eachLog.logstatus == 'pending' ? <CiStopwatch size={30} color='yellow' /> : eachLog.logstatus == 'rejected' ? <RxCross2 size={30} color='red' /> : <ImCheckboxChecked size={25} color='green' />}</td>

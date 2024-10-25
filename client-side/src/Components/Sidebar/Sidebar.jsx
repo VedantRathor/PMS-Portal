@@ -44,7 +44,7 @@ function Sidebar({OpenMember, parentFunction, ReverseLogId , AddTaskFORMVisibili
 
     useEffect(() => {
         const getProjectData = async () => {
-            const response = await axios.get(`${localhost}/project`, {
+            const response = await axios.get(`http://localhost:7007/project`, {
                 headers: {
                     'Authorization': `Bearer ${auth.result.token}`
                 }

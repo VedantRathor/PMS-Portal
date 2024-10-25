@@ -9,6 +9,7 @@ const localhost = "http://localhost:7007";
 
 function AddUser({ ToggleAddUserVisibility , RefreshMe}) {
     let auth = localStorage.getItem('user')
+    const isDemoMode = localStorage.getItem('ISDEMO') === 'true';
     auth = JSON.parse(auth)
 
     const [name,setName] = useState() ; 
@@ -32,7 +33,7 @@ function AddUser({ ToggleAddUserVisibility , RefreshMe}) {
             if( role == undefined || role == 0 ){
                 alert("Please Select Role")
             }else{
-                let response = await axios.post(`${localhost}/register`,{
+                let response = await axios.post(`http://localhost:7007/register`,{
                     name : name,
                     email : email,
                     password : cpassword,
@@ -117,7 +118,7 @@ function AddUser({ ToggleAddUserVisibility , RefreshMe}) {
 
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-success" style={{minWidth:'30%',marginLeft:'20%'}}>Add User</button>
+                                <button disabled={isDemoMode} type="submit" class="btn btn-outline-info" style={{minWidth:'30%',marginLeft:'20%'}}>Add User</button>
                             </div>
                         </div>
                     </form>

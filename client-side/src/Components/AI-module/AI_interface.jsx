@@ -25,7 +25,7 @@ function AI_interface({toggleAIDialogBox}) {
         setSummarize('');
         const formdata = new FormData() ;
         formdata.append("file",file);
-        let response = await axios.post(`${localhost}/upload-pdf`,formdata,{
+        let response = await axios.post(`http://localhost:7007/upload-pdf`,formdata,{
             headers:{"Content-Type":"multipart/form-data"},
         })
         let result = await response.data ;
@@ -62,7 +62,7 @@ function AI_interface({toggleAIDialogBox}) {
                           <input className="form-control" type="file" id="file" name='file' onChange={handleFileUpload }  />
                     </div>
                       
-                      <button style={{height:'40px',marginTop:'30px'}} type="submit" class="btn btn-primary">Summarize</button>
+                      <button style={{height:'40px',marginTop:'30px'}} type="submit" class="btn btn-outline-info">Summarize</button>
                   </div>
                  
           </form>

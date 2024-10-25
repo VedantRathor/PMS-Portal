@@ -5,7 +5,8 @@ import axios from 'axios'
 import ProjectDetailContainter from './ProjectDetailContainter'
 import ProjectInfo from './ProjectInfo'
 const localhost = 'http://localhost:7007'
-
+import { emitEvent, listenEvent } from '../../socket';
+import ChatModel from '../ChatModel'
 function Project() {
   const navigate = useNavigate();
 
@@ -24,12 +25,17 @@ function Project() {
       const navigateToProject = () => {
           navigate('/project')
       }
-},[])
+},[]);
+     
+// listenEvent('chat-message', (message) => {
+//   console.log('Received chat message:', message);
+// });
 
     const [project_id, setProjectId] = useState() 
     const [logid , setLogId] = useState(false);
     const [navigateTask,setNavigateTask] = useState(false) ;
-    const [openMember,setOpenMember] = useState(false) ; 
+    const [openMember,setOpenMember] = useState(false) ;
+    const [openChatModal , setOpenChatModel ] = useState(false); 
 
     const parentFunction = ( project_id ) => {
         setProjectId(project_id);   
@@ -57,6 +63,12 @@ function Project() {
       setOpenMember(false);
       setLogId(!logid);
     }
+    const toggleChatModalVisibility = () =>{
+      setOpenChatModel(!openChatModal);
+    }
+    const closeChat = () =>{
+      setOpenChatModel(false);
+    }
       
 
   return (
@@ -66,7 +78,12 @@ function Project() {
              <Sidebar OpenMember={OpenMember} AddTaskFORMVisibility={AddTaskFORMVisibility} ReverseLogId={ReverseLogId} parentFunction = {parentFunction} />
         </div>
         <div className='project-right-container'>
-      
+             <div onClick={()=>{toggleChatModalVisibility()}} style={{float:'right',marginRight:'10px'}}>open chat</div>
+            { openChatModal && project_id ? <><div onClick={()=>{closeChat()}} className='overlay3'></div>
+              <div className='chat-modal'>
+                  <ChatModel project_id={project_id}/>
+              </div></>: <></>
+            } 
             <ProjectDetailContainter OpenMember={OpenMember} openMember ={openMember} AddTaskFORMVisibility={AddTaskFORMVisibility} navigateTask={navigateTask} logid={logid} project_id = { project_id }/>
         </div>
     </div>

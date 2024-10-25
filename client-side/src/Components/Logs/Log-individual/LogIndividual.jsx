@@ -9,26 +9,48 @@ import { FaCircle } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import Display from '../../Display';
 import { IoIosRefreshCircle } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import moment from 'moment';
 const zero = 0
 const localhost = 'http://localhost:7007'
 function LogIndividual() {
   
-  const navigate = useNavigate()
-  let auth = localStorage.getItem('user')
-  auth = JSON.parse(auth)
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const projectId = location.state?.projectId;
+  const taskName = localhost.state?.taskName;
+  console.log('projectIffd: ',projectId,':',taskName);
+
+  let auth = localStorage.getItem('user');
+  auth = JSON.parse(auth);
   let name, role;
   if (auth != null && auth != 'undefined') {
     name = auth.result.name
     role = auth.result.role
+    
   }else{
     localStorage.removeItem('user')
     navigate('/Login')
   }
+
+  useEffect(()=>{
+    const checkAuth = async() =>{
+      let AUTH = localStorage.getItem('user');
+      AUTH = await JSON.parse(AUTH);
+      if( AUTH ){
+
+      }else{
+        localStorage.removeItem('user');
+        navigate('/Login');
+      }
+    }
+    checkAuth();
+  },[])
   
   const [projectData, setProjectData] = useState()
   const [logData, setLogData] = useState()
-  const [selectProjectData, setSelectedProjectData] = useState(0)
+  const [selectProjectData, setSelectedProjectData] = useState(projectId || 0);
   const [selectStatus, setStatus] = useState('n')
   const [selectSort,setSelectSort] = useState(0)
   const [selectSearch,setSearch] = useState()
@@ -47,12 +69,12 @@ function LogIndividual() {
           project_id : eachProjectShowData.project_id,
           project_name : eachProjectShowData.project_name,
           project_details : eachProjectShowData.project_details,
-          created_at : eachProjectShowData.created_at.split('T')[0],
-          updated_at : eachProjectShowData.updated_at.split('T')[0],
+          created_at : moment(eachProjectShowData.created_at).format('DD MMM YYYY'),
+          updated_at : moment(eachProjectShowData.updated_at).format('DD MMM YYYY'),
           created_by : 'Admin'
         }
        
-        axios.post(`${localhost}/generate-pdf`, { data: pdfdata }, { responseType: 'blob' })
+        axios.post(`http://localhost:7007/generate-pdf`, { data: pdfdata }, { responseType: 'blob' })
             .then((response) => {
                 // Create a Blob from the PDF data
                 const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
@@ -103,7 +125,11 @@ function LogIndividual() {
   const handleForm = async(e) =>{
     e.preventDefault()
     try {
-      const response = await axios.get(`${localhost}/project-details-log-allLogs/${selectProjectData}/${selectStatus}/${selectSort}?searchBy=${selectSearch}`)
+      const response = await axios.get(`http://localhost:7007/project-details-log-allLogs/${selectProjectData}/${selectStatus}/${selectSort}?searchBy=${selectSearch}`,{
+        headers:{
+          Authorization : `Bearer ${auth.result.token}`
+        }
+      })
       const result = await response.data
       setLogData(result.result)
     } catch (error) {
@@ -116,6 +142,10 @@ function LogIndividual() {
   }
 
   const parentFunctionDisplayData = (details = '', eachTask, eachProjectShowData) => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Smooth scrolling effect
+    });
     setDisplayData(details)
     setEachTask(eachTask)
     setProjectShowData(eachProjectShowData)
@@ -125,7 +155,11 @@ function LogIndividual() {
   useEffect(() => {
     const getProjectLogData = async () => {
     try {
-      const response = await axios.get(`${localhost}/project-details-log-allLogs/${selectProjectData}/${selectStatus}/${selectSort}?searchBy=${selectSearch}`)
+      const response = await axios.get(`http://localhost:7007/project-details-log-allLogs/${selectProjectData}/${selectStatus}/${selectSort}?searchBy=${selectSearch}`,{
+        headers:{
+          Authorization : `Bearer ${auth.result.token}`
+        }
+      })
       const result = await response.data
       setLogData(result.result)
       
@@ -138,7 +172,7 @@ function LogIndividual() {
 
   useEffect(() => {
     const getProjectData = async () => {
-      const response = await axios.get(`${localhost}/project`, {
+      const response = await axios.get(`http://localhost:7007/project`, {
         headers: {
           'Authorization': `Bearer ${auth.result.token}`
         }
@@ -152,7 +186,11 @@ function LogIndividual() {
   useEffect(() => {
     const getAllLogs = async () => {
       try {
-        const response = await axios.get(`${localhost}/project-details-log-allLogs/${zero}/${selectStatus}/${selectSort}?searchBy=${selectSearch}`)
+        const response = await axios.get(`http://localhost:7007/project-details-log-allLogs/${selectProjectData}/${selectStatus}/${selectSort}?searchBy=${selectSearch}`,{
+          headers:{
+            Authorization : `Bearer ${auth.result.token}`
+          }
+        })
       const result = await response.data
       setLogData(result.result)
       } catch (error) {
@@ -172,7 +210,7 @@ function LogIndividual() {
         <IoIosRefreshCircle onClick={handleRefresh} size={30} className='refresh' />
         <div class="dropdown">
 
-          <select className='dropdown my-select' onChange={handleProjectChange}>
+          <select className='dropdown my-select' value={selectProjectData} onChange={handleProjectChange}>
             <option value='0' className='dropdown-item'>Select Project</option>
             {
               projectData && projectData.length != 0 ?
@@ -206,7 +244,7 @@ function LogIndividual() {
 
         <form onSubmit={handleForm} className="form-inline my-2 my-lg-0 d-flex gap-2">
           <input onChange={handleSearch} className="form-control mr-sm-2" type="search" placeholder="Search by Employee Name" aria-label="Search" style={{ width: '100%', padding: '3.4%' }} />
-          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <button className="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
 

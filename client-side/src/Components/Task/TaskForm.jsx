@@ -8,8 +8,9 @@ import axios from 'axios';
 
 function TaskForm({ AddTaskFORMVisibility , project_id, RefreshMe}) {
     const navigate = useNavigate()
-    let auth = localStorage.getItem('user')
-    auth = JSON.parse(auth)
+    let auth = localStorage.getItem('user');
+    auth = JSON.parse(auth);
+    const isDemoMode = localStorage.getItem('ISDEMO') === 'true';
     let name, role;
     if (auth != null && auth != undefined) {
       name = auth.result.name
@@ -85,7 +86,7 @@ function TaskForm({ AddTaskFORMVisibility , project_id, RefreshMe}) {
 
                         </div>
 
-                        <button  type="submit" className="btn btn-primary mt-3 d-flex justify-content-center align-items-center">Add <IoIosAddCircle size={20}/></button>
+                        <button disabled={isDemoMode} type="submit" className="btn btn-outline-info mt-3 d-flex justify-content-center align-items-center">Add <IoIosAddCircle size={20}/></button>
                     </form>
                 </div>
             </div>

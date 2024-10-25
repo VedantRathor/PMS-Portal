@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom"
 const localhost = 'http://localhost:7007'
 
 function LogTaskAdd({ openTaskContainer, project_id, task_id, item }) {
-    let auth = localStorage.getItem('user')
+    let auth = localStorage.getItem('user');
+    const isDemoMode = localStorage.getItem('ISDEMO') === 'true';
     auth = JSON.parse(auth)
     let name, role;
     if (auth != null) {
@@ -30,7 +31,7 @@ function LogTaskAdd({ openTaskContainer, project_id, task_id, item }) {
         if (logdata == null || start_time == null) {
           alert('Please Fill the Log Information correctly before submitting')
         } else {
-          let resposne = await axios.post(`${localhost}/add-log/${project_id}/${task_id}`, {
+          let resposne = await axios.post(`http://localhost:7007/add-log/${project_id}/${task_id}`, {
             logdata: logdata,
             start_time: start_time,
             end_time : end_time
@@ -96,7 +97,7 @@ function LogTaskAdd({ openTaskContainer, project_id, task_id, item }) {
                             </div>
 
                             <div class="col-3 mt-3">
-                                <button type="submit" class="btn btn-primary">Add Log</button>
+                                <button disabled = {isDemoMode} type="submit" class="btn btn-outline-info">Add Log</button>
                             </div>
 
                         </form>

@@ -4,9 +4,9 @@ import { IoIosNotifications } from "react-icons/io";
 import { RxDot } from "react-icons/rx";
 import { CiLogout } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
-import {io} from 'socket.io-client';
+// import {io} from 'socket.io-client';
 import ProfileComponent from '../ProfileComponent';
-const socket = io('http://localhost:7007');
+// const socket = io('https://pms-production-c765.up.railway.app');
 import BlurIn from "../../Components/magicui/blur-in" ;
 import { Clock } from 'lucide-react';
 import ClockShow from '../TIMER';
@@ -21,8 +21,8 @@ function Nav({ parentFunction,changeFlag,toggleAIDialogBox , toggleAIGPTIDalogBo
     console.log(viewProfile)
   }
 
-  let auth = localStorage.getItem('user')
-  auth = JSON.parse(auth)
+  let auth = localStorage.getItem('user');
+  auth = JSON.parse(auth);
   const navigate = useNavigate()
 
   const handleNotificationClick = () => {
@@ -36,8 +36,19 @@ function Nav({ parentFunction,changeFlag,toggleAIDialogBox , toggleAIGPTIDalogBo
     toggleAIGPTIDalogBox() ; 
   }
 
+  const handlePendingClicked = () => {
+    alert(`You need premium to access this!
+Contact at vedantrathore627@gmail.com`)
+  }
+
+  const handleDetailClicked = () => {
+    alert(`You need premium to access this!
+Contact at vedantrathore627@gmail.com`);
+  }
+
   return (
     <div className='navbar'>
+     
       <div className='navbar-left'>
         <ul className='navbar-left-ul'>
          <li className='logo'><a ><img className='logoimage' src='https://image.freepik.com/free-vector/service-logo-template-design-vector_20029-570.jpg'/></a></li>
@@ -46,8 +57,8 @@ function Nav({ parentFunction,changeFlag,toggleAIDialogBox , toggleAIGPTIDalogBo
           <li><Link to='/project'>Project</Link></li>
           <li><Link to='/task'>Task</Link></li>
           <li><Link to='/Logs'>Log</Link></li>
-          <li><Link>Pending</Link></li>
-          <li><Link>Details</Link></li>
+          <li onClick={()=>{handlePendingClicked()}}><Link>Pending</Link></li>
+          <li onClick={()=>{handleDetailClicked()}}><Link>Details</Link></li>
           <li><Link to='/about'>About</Link></li>
           {auth && auth.result.role == 1 ? <li><Link to='/All-Users'>Users</Link></li>: <></>}
           </> : <h5 className='text-white text-center'>Welcome to PMS Portal, Please Login! </h5>}
@@ -59,13 +70,18 @@ function Nav({ parentFunction,changeFlag,toggleAIDialogBox , toggleAIGPTIDalogBo
       </div>
       
       <div className='navbar-right'>
-        <li  style={{float:'right', marginBottom:'4%'}}>
-        <div className='d-flex justify-content-center align-items-center gap-1 '>
-          <CiClock1 className='text-info' color='white' size={27}/>
-          <ClockShow />
+        <div  style={{float:'right', marginBottom:'4%'}}> 
+        <div className='d-flex justify-content-center  gap-4'>
+          { auth?.result?.company_name ?<div style={{width:'170px',fontSize:'16px'}} className='badge badge-primary bg-secondary text-white d-flex justify-content-center align-items-center glowing-border'> {auth?.result?.company_name}</div> : <></>}
+        
+          <div className='d-flex justify-content-center gap-1'>
+            <CiClock1 className='text-info' color='white' size={27}/>
+            <ClockShow />
+          </div>
+        
         </div>
 
-        </li>
+        </div>
         <ul style={{clear:'both'}} className='navbar-right-ul'>
           <div className='d-flex gap-3'>
             {auth ?
